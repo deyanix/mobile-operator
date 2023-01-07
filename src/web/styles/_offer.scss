@@ -1,0 +1,29 @@
+$offer-padding: 16px;
+
+.offer-card {
+  border-radius: 8px;
+  background: #f8f8f8;
+  border: 1px solid #d5d5d5;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+
+  .offer-card-header {
+    border-radius: 8px 8px 0 0;
+    background: $primary;
+    color: #ffffff;
+    font-size: 1.5rem;
+    text-align: center;
+    padding: $offer-padding;
+    font-family: "Nunito";
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .offer-card-section {
+    padding: calc($offer-padding/2) $offer-padding;
+    border-top: 1px solid rgba(50, 50, 50, 0.3);
+
+    &:first-child {
+      border-top: none;
+    }
+  }
+}

@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="pl"
+	  xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:th="http://www.thymeleaf.org"
+	  layout:decorate="~{layout/main}">
+<head>
+	<title>Oferty</title>
+</head>
+<body>
+<div layout:fragment="content">
+	<div class="bg-primary text-white text-center py-4">
+		<div class="h2 container">Oferty internetu mobilnego</div>
+	</div>
+	<div class="container py-4">
+		<div class="row g-3">
+			<div th:each="offer: ${offers}" class="col-12 col-md-6 col-lg-4 offer-card-container">
+				<div layout:insert="~{offer-card :: offerCard(offer=${offer})}"></div>
+			</div>
+		</div>
+	</div>
+	<div class="bg-primary text-white text-center py-4">
+		<div class="h2 container">Oferty komórkowe</div>
+	</div>
+	<div class="container py-4">
+		<div class="row g-3">
+			<div th:each="offer: ${mobileOffers}" class="col-12 col-md-6 col-lg-4 offer-card-container">
+				<div layout:insert="~{offer-card :: offerCard(offer=${offer})}"></div>
+			</div>
+		</div>
+	</div>
+	<div id="offer-modal" class="modal fade" tabindex="-1">
+		<div class="modal-dialog">
+			<form class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Podsumowanie zamówienia</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<p>
+						Poniżej znajdują się szczegóły wybranej taryfy. Jeżeli zgadzasz się z warunkami umowy, kliknij przycisk "Zatwierdź".
+					</p>
+					<table class="offer-modal-details table"></table>
+					<input type="hidden" id="offer-modal-id" name="offer_id" />
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+					<button type="button" class="offer-modal-submit btn btn-primary">
+						Zatwierdź
+						<div class="spinner-border spinner-border-sm" role="status">
+							<span class="visually-hidden">Loading...</span>
+						</div>
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+</body>
+</html>

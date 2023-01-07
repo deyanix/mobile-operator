@@ -29,19 +29,21 @@ public class SecurityConfiguration {
         builder.authenticationProvider(authenticationProvider);
     }
 
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf()
-                .disable()
+                .csrf().disable()
                 .authorizeHttpRequests()
-                .anyRequest()
-                .authenticated()
+                    .requestMatchers("/user/*").hasRole("USER")
+                    .requestMatchers("/admin/*").hasRole("ADMIN")
+                    .anyRequest().permitAll()
                 .and()
                 .formLogin()
-                .loginPage("/login")
-                .permitAll()
+                    .loginPage("/login")
+                    .permitAll()
+                .and()
+                    .logout()
+                    .logoutUrl("/logout")
                 .and()
                 .build();
     }

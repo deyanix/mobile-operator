@@ -20,6 +20,7 @@ dependencies {
     implementation 'org.bouncycastle:bcprov-jdk18on:1.72'
     implementation 'org.thymeleaf:thymeleaf'
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
     runtimeOnly 'com.oracle.database.jdbc:ojdbc8'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'

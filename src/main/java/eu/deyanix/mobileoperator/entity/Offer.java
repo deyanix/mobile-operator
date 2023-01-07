@@ -1,14 +1,16 @@
 package eu.deyanix.mobileoperator.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "OFFERS")
-@Inheritance(strategy = InheritanceType.JOINED)
 public class Offer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column
+    private String name;
     @Column
     private Integer duration;
     @Column
@@ -17,6 +19,9 @@ public class Offer {
     private Float activationFee;
     @Column
     private Integer internetLimit;
+    @OneToOne(mappedBy = "offer")
+    @JsonManagedReference
+    private MobileOffer mobileOffer;
 
     public Long getId() {
         return id;
@@ -56,5 +61,21 @@ public class Offer {
 
     public void setInternetLimit(Integer internetLimit) {
         this.internetLimit = internetLimit;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public MobileOffer getMobileOffer() {
+        return mobileOffer;
+    }
+
+    public void setMobileOffer(MobileOffer mobileOffer) {
+        this.mobileOffer = mobileOffer;
     }
 }

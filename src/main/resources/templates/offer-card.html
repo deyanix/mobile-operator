@@ -1,0 +1,68 @@
+<!-- @thymesVar id="offer" type="eu.deyanix.mobileoperator.entity.Offer" -->
+<div xmlns:th="http://www.thymeleaf.org"
+	 xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	 xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	 layout:fragment="offerCard(offer)"
+	 th:attr="data-offer-id=${offer.getId()}"
+	 class="offer-card">
+	<div class="offer-card-header">
+		<div th:text="${offer.getName()}"></div>
+	</div>
+	<div class="offer-card-section">
+		<small class="offer-parameter-name">Opłata aktywacyjna</small>
+		<div class="offer-parameter-value">
+			<span th:text="${#numbers.formatDecimal(offer.getActivationFee(), 1, 2, 'COMMA')}" class="h3 text-primary"></span>
+			<span>zł</span>
+		</div>
+	</div>
+	<div class="offer-card-section">
+		<small class="offer-parameter-name">Opłata miesięczna</small>
+		<div class="offer-parameter-value">
+			<span th:text="${#numbers.formatDecimal(offer.getMonthlyCost(), 0, 2, 'COMMA')}" class="h3 text-primary"></span>
+			<span>zł</span>
+		</div>
+	</div>
+	<div class="offer-card-section">
+		<small class="offer-parameter-name">Czas trwania</small>
+		<div class="offer-parameter-value">
+			<span th:text="${offer.getDuration()}" class="h3 text-primary"></span>
+			<span>mies.</span>
+		</div>
+	</div>
+	<div class="offer-card-section">
+		<small class="offer-parameter-name">Limit internetu</small>
+		<div th:if="${offer.getInternetLimit() != null}" class="offer-parameter-value">
+			<span th:text="${offer.getInternetLimit() / 1024}" class="h3 text-primary"></span>
+			<span>GB</span>
+		</div>
+		<div th:if="${offer.getInternetLimit() == null}" class="offer-parameter-value">
+			<span class="h3 text-primary">Bez limitu</span>
+		</div>
+	</div>
+	<th:block th:if="${offer.getMobileOffer() != null}">
+		<div class="offer-card-section">
+			<small class="offer-parameter-name">Limit MMS</small>
+			<div th:if="${offer.getMobileOffer().getMmsLimit() != null}" class="offer-parameter-value">
+				<span th:text="${offer.getMobileOffer().getMmsLimit()}" class="h3 text-primary"></span>
+			</div>
+			<div th:if="${offer.getMobileOffer().getMmsLimit() == null}" class="offer-parameter-value">
+				<span class="h3 text-primary">Bez limitu</span>
+			</div>
+		</div>
+		<div class="offer-card-section">
+			<small class="offer-parameter-name">Limit SMS</small>
+			<div th:if="${offer.getMobileOffer().getSmsLimit() != null}" class="offer-parameter-value">
+				<span th:text="${offer.getMobileOffer().getSmsLimit()}" class="h3 text-primary"></span>
+			</div>
+			<div th:if="${offer.getMobileOffer().getSmsLimit() == null}" class="offer-parameter-value">
+				<span class="h3 text-primary">Bez limitu</span>
+			</div>
+		</div>
+	</th:block>
+	<div sec:authorize="hasRole('USER')" class="offer-card-section text-center">
+		<button class="offer-choose btn btn-primary px-5">Wybierz</button>
+	</div>
+	<div sec:authorize="!hasRole('USER')" class="offer-card-section text-center text-black-50">
+		Zaloguj się, aby wybrać ofertę
+	</div>
+</div>

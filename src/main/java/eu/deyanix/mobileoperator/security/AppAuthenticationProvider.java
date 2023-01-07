@@ -31,7 +31,7 @@ public class AppAuthenticationProvider implements AuthenticationProvider {
         String name = authentication.getName();
         String password = authentication.getCredentials().toString();
         User user = userRepository.findByUsername(name).orElseThrow();
-        if (user == null || !passwordEncoder.matches(password, user.getPassword())) {
+        if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new BadCredentialsException("Bad credentials.");
         }
         return new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities());

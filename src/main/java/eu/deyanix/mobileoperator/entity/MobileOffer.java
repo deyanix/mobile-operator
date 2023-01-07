@@ -1,13 +1,18 @@
 package eu.deyanix.mobileoperator.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "MOBILE_OFFERS")
 public class MobileOffer {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "OFFER_ID")
     private Long id;
+    @OneToOne
+    @PrimaryKeyJoinColumn(name = "OFFER_ID")
+    @JsonBackReference
+    private Offer offer;
     @Column
     private Integer smsLimit;
     @Column
@@ -23,6 +28,14 @@ public class MobileOffer {
 
     public Long getId() {
         return id;
+    }
+
+    public Offer getOffer() {
+        return offer;
+    }
+
+    public void setOffer(Offer offer) {
+        this.offer = offer;
     }
 
     public Integer getSmsLimit() {
@@ -56,4 +69,5 @@ public class MobileOffer {
     public void setMmsRoamingLimit(Integer mmsRoamingLimit) {
         this.mmsRoamingLimit = mmsRoamingLimit;
     }
+
 }

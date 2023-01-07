@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	  lang="en"
+	  data-bs-theme="dark">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title layout:title-pattern="$CONTENT_TITLE | $LAYOUT_TITLE">Operator komórkowy</title>
+
+	<link th:href="@{/assets/index.css}" rel="stylesheet"/>
+</head>
+<body>
+	<nav class="navbar navbar-expand-lg bg-light">
+		<div class="container-fluid">
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+				<a class="navbar-brand" href="#">Hidden brand</a>
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/offers}">Oferty</a>
+					</li>
+				</ul>
+			</div>
+			<div sec:authorize="!hasRole('USER')" class="dropdown">
+				<a class="btn btn-outline-primary" type="button" th:href="@{/login}">
+					<i class="fa-solid fa-right-to-bracket me-1"></i>
+					<span>Zaloguj</span>
+				</a>
+			</div>
+			<div sec:authorize="hasRole('USER')" class="dropdown">
+				<button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+					<i class="fa-solid fa-user me-1"></i>
+					<span th:text="${#authentication.getName()}"></span>
+				</button>
+				<ul class="dropdown-menu dropdown-menu-end m-0">
+					<li>
+						<a class="dropdown-item" th:href="@{/logout}">
+							<i class="fa-solid fa-right-from-bracket"></i>
+							Wyloguj
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<main id="content" layout:fragment="content"></main>
+
+<!--	<footer class="footer">-->
+<!--		<p class="text-muted">Place sticky footer content here.</p>-->
+<!--	</footer>-->
+	<script th:src="@{/assets/index.js}"></script>
+</body>
+</html>

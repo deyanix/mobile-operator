@@ -1,0 +1,44 @@
+{
+  "name": "mobile-operator",
+  "private": true,
+  "version": "1.0.0",
+  "dependencies": {
+    "@babel/core": "^7.17.5",
+    "@babel/preset-env": "^7.16.11",
+    "@fontsource/nunito": "^4.5.11",
+    "@fortawesome/fontawesome-free": "^6.2.1",
+    "@popperjs/core": "^2.11.6",
+    "axios": "^1.2.2",
+    "babel-loader": "^8.2.3",
+    "bootstrap": "^5.2.3",
+    "css-loader": "^6.7.1",
+    "file-loader": "^6.2.0",
+    "fork-ts-checker-webpack-plugin": "^7.2.1",
+    "jquery": "^3.6.3",
+    "mini-css-extract-plugin": "^2.6.1",
+    "npm": "^9.2.0",
+    "style-loader": "^3.3.1",
+    "ts-loader": "^9.2.6",
+    "tsconfig-paths-webpack-plugin": "^4.0.0",
+    "typescript": "^4.5.5",
+    "url-loader": "^4.1.1",
+    "webpack": "^5.69.1",
+    "webpack-cli": "^4.9.2"
+  },
+  "devDependencies": {
+    "@parcel/transformer-sass": "2.8.2",
+    "@types/bootstrap": "^5.2.6",
+    "@types/jquery": "^3.5.16",
+    "buffer": "^5.5.0",
+    "parcel": "^2.8.2"
+  },
+  "scripts": {
+    "watch": "parcel watch --no-content-hash"
+  },
+  "targets": {
+    "default": {
+      "source": "scripts/index.ts",
+      "distDir": "../main/resources/static/assets"
+    }
+  }
+}
