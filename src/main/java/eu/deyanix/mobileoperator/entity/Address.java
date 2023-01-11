@@ -10,13 +10,13 @@ public class Address {
 	private Long id;
 	@Column
 	private String street;
-	@Column
+	@Column(nullable = false)
 	private String buildingNumber;
 	@Column
 	private String apartmentNumber;
-	@Column
+	@Column(nullable = false)
 	private String postalCode;
-	@Column
+	@Column(nullable = false)
 	private String city;
 
 	public void setId(Long id) {
@@ -65,6 +65,13 @@ public class Address {
 
 	public void setCity(String city) {
 		this.city = city;
+	}
+
+	public String getNumber() {
+		if (apartmentNumber != null && !apartmentNumber.isEmpty()) {
+			return String.join("/", buildingNumber, apartmentNumber);
+		}
+		return buildingNumber;
 	}
 
 	@Override

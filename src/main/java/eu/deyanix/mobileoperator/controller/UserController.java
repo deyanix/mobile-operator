@@ -1,11 +1,14 @@
 package eu.deyanix.mobileoperator.controller;
 
+import eu.deyanix.mobileoperator.dto.UserAgreementCriteria;
 import eu.deyanix.mobileoperator.entity.Address;
 import eu.deyanix.mobileoperator.entity.Customer;
 import eu.deyanix.mobileoperator.entity.User;
 import eu.deyanix.mobileoperator.repository.AddressRepository;
+import eu.deyanix.mobileoperator.repository.AgreementRepository;
 import eu.deyanix.mobileoperator.repository.CustomerRepository;
 import eu.deyanix.mobileoperator.repository.UserRepository;
+import eu.deyanix.mobileoperator.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -15,75 +18,46 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Optional;
+
 @Controller
 public class UserController {
-	private UserRepository userRepository;
-	private CustomerRepository customerRepository;
-	private AddressRepository addressRepository;
+	private UserService userService;
 
-	public UserController(UserRepository userRepository, CustomerRepository customerRepository, AddressRepository addressRepository) {
-		this.userRepository = userRepository;
-		this.customerRepository = customerRepository;
-		this.addressRepository = addressRepository;
+	public UserController(UserService userService) {
+		this.userService = userService;
 	}
 
 	@RequestMapping("/user")
-	public String user(Authentication authentication, Model model) {
-		Object principal = authentication.getPrincipal();
-		if (!(principal instanceof User)) {
-			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
-		}
-
-		User user = userRepository.findById(((User) principal).getId()).orElseThrow();
+	public String user(Model model) {
+		User user = userService.getCurrentUser();
 		Customer customer = user.getCustomer();
-		Address address = customer != null ? customer.getAddress() : null;
-
-		String addressLine1 = null;
-		String addressLine2 = null;
-		if (address != null) {
-			if (address.getApartmentNumber() != null && !address.getApartmentNumber().isEmpty()) {
-				addressLine1 = String.format("%s %s/%s", address.getStreet(), address.getBuildingNumber(), address.getApartmentNumber());
-			} else {
-				addressLine1 = String.format("%s %s", address.getStreet(), address.getBuildingNumber());
-			}
-			addressLine2 = String.format("%s %s", address.getPostalCode(), address.getCity());
-		}
+		Address address = Optional.of(customer)
+				.map(Customer::getAddress)
+				.orElse(null);
 
 		model.addAttribute("user", user);
 		model.addAttribute("customer", customer);
 		model.addAttribute("address", address);
-		model.addAttribute("addressLine1", addressLine1);
-		model.addAttribute("addressLine2", addressLine2);
 		return "user";
 	}
 
 	@GetMapping("/user/edit")
-	public String editUser(Authentication authentication, Model model) {
-		Object principal = authentication.getPrincipal();
-		if (!(principal instanceof User)) {
-			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
-		}
-
-		User user = userRepository.findById(((User) principal).getId()).orElseThrow();
-		Customer customer = user.getCustomer();
-
-		model.addAttribute("customer", customer);
+	public String editUser(Model model) {
+		User user = userService.getCurrentUser();
+		model.addAttribute("customer", user.getCustomer());
 		return "edit-user";
 	}
 
 	@PostMapping("/user/edit")
-	public String updateUser(Authentication authentication, Customer customer) {
-		Object principal = authentication.getPrincipal();
-		if (!(principal instanceof User)) {
-			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
-		}
-		User user = userRepository.findById(((User) principal).getId()).orElseThrow();
-
-		customer.getAddress().setId(user.getCustomer().getAddress().getId());
-		addressRepository.save(customer.getAddress());
-
-		customer.setId(user.getCustomer().getId());
-		customerRepository.save(customer);
+	public String updateUser(Customer customer) {
+		userService.updateCustomer(customer);
 		return "redirect:/";
+	}
+
+	@GetMapping("/user/agreements")
+	public String getAgreements(Model model, UserAgreementCriteria criteria) {
+		model.addAttribute("agreements", userService.getAgreements(criteria));
+		return "user-agreements";
 	}
 }

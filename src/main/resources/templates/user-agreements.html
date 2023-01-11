@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="pl"
+	  xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:th="http://www.thymeleaf.org"
+	  layout:decorate="~{layout/user}">
+<body>
+<div layout:fragment="content">
+	<table class="table table-bordered">
+		<tr>
+			<th></th>
+		</tr>
+		<tr th:each="agreement : ${agreements}" th:object="${agreement}">
+			<td th:text="*{offer.name}"></td>
+			<td th:text="*{signingDate}"></td>
+			<td th:text="*{expirationDate}"></td>
+		</tr>
+	</table>
+</div>
+</body>
+</html>

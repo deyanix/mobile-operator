@@ -31,8 +31,14 @@
 		</div>
 		<div th:if="${address != null}" class="mb-2">
 			<div class="h6">Adres</div>
-			<div th:text="${addressLine1.toUpperCase()}"></div>
-			<div th:text="${addressLine2.toUpperCase()}"></div>
+			<div>
+				<span th:text="${address.street ?: address.city}"></span>
+				<span th:text="${address.number}"></span>
+			</div>
+			<div>
+				<span th:text="${address.postalCode}"></span>
+				<span th:text="${address.city}"></span>
+			</div>
 		</div>
 	</div>
 </body>

@@ -1,7 +1,9 @@
 package eu.deyanix.mobileoperator.entity;
 
 import jakarta.persistence.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -10,10 +12,12 @@ public class Agreement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column
-    private Date sigingDate;
-    @Column
-    private Date expirationDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Temporal(TemporalType.DATE)
+    private LocalDate signingDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Temporal(TemporalType.DATE)
+    private LocalDate expirationDate;
     @ManyToOne
     private Offer offer;
     @ManyToOne
@@ -27,19 +31,19 @@ public class Agreement {
         return id;
     }
 
-    public Date getSigingDate() {
-        return sigingDate;
+    public LocalDate getSigningDate() {
+        return signingDate;
     }
 
-    public void setSigingDate(Date sigingDate) {
-        this.sigingDate = sigingDate;
+    public void setSigningDate(LocalDate sigingDate) {
+        this.signingDate = sigingDate;
     }
 
-    public Date getExpirationDate() {
+    public LocalDate getExpirationDate() {
         return expirationDate;
     }
 
-    public void setExpirationDate(Date expirationDate) {
+    public void setExpirationDate(LocalDate expirationDate) {
         this.expirationDate = expirationDate;
     }
 
