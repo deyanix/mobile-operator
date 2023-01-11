@@ -5,24 +5,8 @@ import '@popperjs/core';
 import 'bootstrap';
 
 import $ from 'jquery';
-import {Modal} from 'bootstrap';
+import {Modal, Collapse} from 'bootstrap';
 import axios from "axios";
-
-interface Offer {
-	id: number;
-	activationFee: number | null;
-	duration: number;
-	internetLimit: number;
-	monthlyCost: number;
-	mobileOffer: MobileOffer | null;
-}
-
-interface MobileOffer {
-	mmsLimit: number | null;
-	mmsRoamingLimit: number | null;
-	smsLimit: number | null;
-	smsRoamingLimit: number | null;
-}
 
 const api = axios.create({
 	withCredentials: true,
@@ -33,6 +17,33 @@ function wait(time: number): Promise<void> {
 		setTimeout(() => resolve(), time);
 	});
 }
+
+$(function () {
+	const $navbar = $("#navbarNav");
+	const navbarEl = $navbar.get(0);
+	if (navbarEl === undefined) {
+		return;
+	}
+	const navbar = new Collapse(navbarEl, {
+		toggle: false
+	});
+
+	let lastWidth = 0;
+	$(window).resize(function() {
+		const width = $(window).width();
+		if (width === undefined) {
+			return;
+		}
+
+		if (width >= 768) {
+			navbar.show();
+		} else if (lastWidth >= 768) {
+			console.log('YES!')
+			navbar.hide();
+		}
+		lastWidth = width;
+	});
+})
 
 $(function () {
 	const $modalEl = $('#offer-modal');

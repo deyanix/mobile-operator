@@ -1,0 +1,75 @@
+.user-container {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+.user-header {
+  display: flex;
+  align-items: center;
+}
+
+.user-icon {
+  border-radius: 50%;
+  background: $primary;
+  color: #fff;
+  padding: 8px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 12px;
+}
+
+.user-username {
+  font-size: 1.5rem;
+  font-weight: 600;
+  font-family: "Nunito";
+}
+
+.user-name {
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: "Nunito";
+  color: $gray-700;
+}
+
+.user-nav {
+  display: flex;
+  flex-direction: column;
+  --bs-nav-link-padding-x: 0;
+  --bs-nav-link-padding-y: 0;
+
+  .nav-link {
+    transition: background .3s;
+    margin: 4px 0;
+    padding: 6px 10px;
+    border-radius: 4px;
+    color: #000;
+
+    &:hover {
+      background: rgba(54, 122, 21, 0.22);
+    }
+
+    &.active {
+      font-weight: 600;
+      background: rgba(54, 122, 21, 0.35);
+    }
+  }
+}
+
+@include media-breakpoint-up(md) {
+  .user-panel {
+    border-right: var(--bs-card-border-width) solid var(--bs-card-border-color);
+
+    > .collapse:not(.show) {
+      display: block;
+    }
+  }
+}
+
+@include media-breakpoint-down(md) {
+  .user-panel {
+    border-bottom: var(--bs-card-border-width) solid var(--bs-card-border-color);
+  }
+}

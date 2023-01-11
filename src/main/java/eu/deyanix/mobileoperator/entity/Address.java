@@ -15,8 +15,6 @@ public class Address {
 	@Column
 	private String apartmentNumber;
 	@Column
-	private String houseNumber;
-	@Column
 	private String postalCode;
 	@Column
 	private String city;
@@ -53,14 +51,6 @@ public class Address {
 		this.apartmentNumber = apartmentNumber;
 	}
 
-	public String getHouseNumber() {
-		return houseNumber;
-	}
-
-	public void setHouseNumber(String houseNumber) {
-		this.houseNumber = houseNumber;
-	}
-
 	public String getPostalCode() {
 		return postalCode;
 	}
@@ -75,5 +65,17 @@ public class Address {
 
 	public void setCity(String city) {
 		this.city = city;
+	}
+
+	@Override
+	public String toString() {
+		return "Address{" +
+				"id=" + id +
+				", street='" + street + '\'' +
+				", buildingNumber='" + buildingNumber + '\'' +
+				", apartmentNumber='" + apartmentNumber + '\'' +
+				", postalCode='" + postalCode + '\'' +
+				", city='" + city + '\'' +
+				'}';
 	}
 }

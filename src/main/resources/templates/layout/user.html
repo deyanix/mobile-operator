@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	  lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title layout:title-pattern="$CONTENT_TITLE | $LAYOUT_TITLE">Operator komórkowy</title>
+
+	<link th:href="@{/assets/index.css}" rel="stylesheet"/>
+</head>
+<body>
+
+<div class="user-container container">
+	<div class="card">
+		<div class="row g-0">
+			<div class="user-panel col-12 col-md-4">
+				<div class="card-body">
+					<div class="user-header">
+						<div class="user-icon">
+							<i class="fa-solid fa-user"></i>
+						</div>
+						<div class="col">
+							<div th:text="${#authentication.getName()}" class="user-username"></div>
+							<div th:text="${#authentication.getPrincipal().getCustomer().getFirstName()} + ' ' + ${#authentication.getPrincipal().getCustomer().getLastName()}"
+								 class="user-name"></div>
+						</div>
+						<button class="btn btn-outline-primary d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+							<i class="fa-solid fa-bars"></i>
+						</button>
+					</div>
+				</div>
+				<div class="collapse show" id="navbarNav">
+					<hr class="my-0"/>
+					<div class="card-body">
+						<ul class="nav user-nav">
+							<li class="nav-item">
+								<a class="nav-link" th:href="@{/user}">
+									<i class="fa-solid fa-user-tag me-1"></i>
+									<span>Dane abonenta</span>
+								</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="#">
+									<i class="fa-solid fa-scroll me-1"></i>
+									<span>Umowy</span>
+								</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" th:href="@{/}">
+									<i class="fa-solid fa-arrow-left me-1"></i>
+									<span>Powrót do strony</span>
+								</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" th:href="@{/logout}">
+									<i class="fa-solid fa-right-from-bracket me-1"></i>
+									<span>Wyloguj</span>
+								</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="col-12 col-md">
+				<div class="card-body">
+					<main layout:fragment="content"></main>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script th:src="@{/assets/index.js}"></script>
+</body>
+</html>

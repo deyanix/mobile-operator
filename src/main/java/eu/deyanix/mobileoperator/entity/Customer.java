@@ -1,6 +1,7 @@
 package eu.deyanix.mobileoperator.entity;
 
 import jakarta.persistence.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -14,7 +15,8 @@ public class Customer {
 	private String firstName;
 	@Column
 	private String lastName;
-	@Column
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Temporal(TemporalType.DATE)
 	private Date birthDate;
 	@Column
 	private String pesel;
@@ -67,5 +69,17 @@ public class Customer {
 
 	public void setAddress(Address address) {
 		this.address = address;
+	}
+
+	@Override
+	public String toString() {
+		return "Customer{" +
+				"id=" + id +
+				", firstName='" + firstName + '\'' +
+				", lastName='" + lastName + '\'' +
+				", birthDate=" + birthDate +
+				", pesel='" + pesel + '\'' +
+				", address=" + address +
+				'}';
 	}
 }

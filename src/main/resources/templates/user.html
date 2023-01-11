@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="pl"
+	  xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:th="http://www.thymeleaf.org"
+	  layout:decorate="~{layout/user}">
+<body>
+	<div layout:fragment="content">
+		<div th:if="${user.getCustomer() == null}">
+			Nie skonfigurowano dla konta danych abonanta. Skontaktuj się z administracją, aby wprowadzić dane.
+		</div>
+		<div th:if="${customer != null}" class="mb-2">
+			<div class="d-flex justify-content-between align-items-center">
+				<div class="h6">Dane abonanta</div>
+				<a class="btn btn-outline-primary" th:href="@{/user/edit}">
+					<i class="fa-solid fa-pen-to-square"></i>
+				</a>
+			</div>
+			<div>
+				<span th:text="${user.getCustomer().getFirstName().toUpperCase()}"></span>
+				<span th:text="${user.getCustomer().getLastName().toUpperCase()}"></span>
+			</div>
+			<div>
+				ur.
+				<span th:text="${#dates.format(user.getCustomer().getBirthDate(), 'yyyy-MM-dd')}"></span>
+			</div>
+			<div>
+				PESEL
+				<span th:text="${user.getCustomer().getPesel()}"></span>
+			</div>
+		</div>
+		<div th:if="${address != null}" class="mb-2">
+			<div class="h6">Adres</div>
+			<div th:text="${addressLine1.toUpperCase()}"></div>
+			<div th:text="${addressLine2.toUpperCase()}"></div>
+		</div>
+	</div>
+</body>
+</html>
