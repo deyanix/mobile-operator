@@ -57,6 +57,7 @@ public class UserController {
 
 	@GetMapping("/user/agreements")
 	public String getAgreements(Model model, UserAgreementCriteria criteria) {
+		model.addAttribute("criteria", criteria);
 		model.addAttribute("agreements", userService.getAgreements(criteria));
 		return "user-agreements";
 	}

@@ -8,6 +8,7 @@ import eu.deyanix.mobileoperator.repository.AddressRepository;
 import eu.deyanix.mobileoperator.repository.AgreementRepository;
 import eu.deyanix.mobileoperator.repository.CustomerRepository;
 import eu.deyanix.mobileoperator.repository.UserRepository;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -50,7 +51,7 @@ public class UserService {
 		return PageRequest.of(criteria.getPage(), criteria.getPageSize());
 	}
 
-	public Iterable<Agreement> getAgreements(UserAgreementCriteria criteria) {
+	public Page<Agreement> getAgreements(UserAgreementCriteria criteria) {
 		User user = getCurrentUser();
 		PageRequest pageRequest = createAgreementsPageRequest(criteria);
 

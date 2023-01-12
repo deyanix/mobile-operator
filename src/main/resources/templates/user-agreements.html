@@ -5,17 +5,87 @@
 	  xmlns:th="http://www.thymeleaf.org"
 	  layout:decorate="~{layout/user}">
 <body>
-<div layout:fragment="content">
-	<table class="table table-bordered">
-		<tr>
-			<th></th>
-		</tr>
-		<tr th:each="agreement : ${agreements}" th:object="${agreement}">
-			<td th:text="*{offer.name}"></td>
-			<td th:text="*{signingDate}"></td>
-			<td th:text="*{expirationDate}"></td>
-		</tr>
-	</table>
+<div layout:fragment="content" th:object="${criteria}">
+	<div class="row mb-3">
+		<label for="mobile-select" class="col-md-3 col-form-label">Rodzaj umowy</label>
+		<div class="col-md-9">
+			<select id="mobile-select" class="form-select" th:field="*{mobile}">
+				<option th:value="''" th:text="Wszystkie"></option>
+				<option th:value="true" th:text="Mobilne"></option>
+				<option th:value="false" th:text="Internetowe"></option>
+			</select>
+		</div>
+	</div>
+	<div class="table-responsive">
+		<table class="table table-bordered">
+			<tr>
+				<th>Taryfa</th>
+				<th>
+					<div class="d-flex justify-content-between align-items-center">
+						<span class="me-3">Data zawarcia umowy</span>
+						<div>
+							<a th:href="@{/user/agreements(mobile=${criteria.mobile}, page='0', pageSize=${criteria.pageSize}, orderBy='signingDate', orderDirection='ASC')}"
+							   th:classappend="${#bools.isTrue(criteria.orderBy?.equals('signingDate')) && #bools.isTrue(criteria.orderDirection?.equals('ASC')) ? 'text-primary' : 'text-secondary'}">
+								<i class="fa-solid fa-caret-up"></i>
+							</a>
+							<a th:href="@{/user/agreements(mobile=${criteria.mobile}, page='0', pageSize=${criteria.pageSize}, orderBy='signingDate', orderDirection='DESC')}"
+							   th:classappend="${#bools.isTrue(criteria.orderBy?.equals('signingDate')) && #bools.isTrue(criteria.orderDirection?.equals('DESC')) ? 'text-primary' : 'text-secondary'}">
+								<i class="fa-solid fa-caret-down"></i>
+							</a>
+						</div>
+					</div>
+				</th>
+				<th>
+					<div class="d-flex justify-content-between align-items-center">
+						<span class="me-3">Data wygaśnięcia</span>
+						<div>
+							<a th:href="@{/user/agreements(mobile=${criteria.mobile}, page='0', pageSize=${criteria.pageSize}, orderBy='expirationDate', orderDirection='ASC')}"
+							   th:classappend="${#bools.isTrue(criteria.orderBy?.equals('expirationDate')) && #bools.isTrue(criteria.orderDirection?.equals('ASC')) ? 'text-primary' : 'text-secondary'}">
+								<i class="fa-solid fa-caret-up"></i>
+							</a>
+							<a th:href="@{/user/agreements(mobile=${criteria.mobile}, page='0', pageSize=${criteria.pageSize}, orderBy='expirationDate', orderDirection='DESC')}"
+							   th:classappend="${#bools.isTrue(criteria.orderBy?.equals('expirationDate')) && #bools.isTrue(criteria.orderDirection?.equals('DESC')) ? 'text-primary' : 'text-secondary'}">
+								<i class="fa-solid fa-caret-down"></i>
+							</a>
+						</div>
+					</div>
+				</th>
+			</tr>
+			<tr th:each="agreement : ${agreements}" th:object="${agreement}">
+				<td th:text="*{offer.name}"></td>
+				<td th:text="*{signingDate}"></td>
+				<td th:text="*{expirationDate}"></td>
+			</tr>
+		</table>
+	</div>
+	<div class="row mt-3">
+		<div class="col-md-3">
+			<select id="page-size-select" class="form-select" th:field="*{pageSize}">
+				<option th:value="10" th:text="10"></option>
+				<option th:value="25" th:text="25"></option>
+				<option th:value="50" th:text="50"></option>
+				<option th:value="100" th:text="100"></option>
+			</select>
+		</div>
+		<div class="col mt-3 mt-md-0">
+			<ul class="pagination justify-content-center justify-content-md-end">
+				<li class="page-item">
+					<a th:href="@{/user/agreements(mobile=${criteria.mobile}, page=${criteria.page - 1}, pageSize=${criteria.pageSize}, orderBy=${criteria.orderBy}, orderDirection=${criteria.orderDirection})}"
+					   th:classappend="${criteria.page > 0 ? '' : 'disabled'}"
+					   class="page-link">
+						<i class="fa-solid fa-chevron-left"></i>
+					</a>
+				</li>
+				<li class="page-item">
+					<a th:href="@{/user/agreements(mobile=${criteria.mobile}, page=${criteria.page + 1}, pageSize=${criteria.pageSize}, orderBy=${criteria.orderBy}, orderDirection=${criteria.orderDirection})}"
+					   th:classappend="${criteria.page < agreements.totalPages - 1 ? '' : 'disabled'}"
+					   class="page-link">
+						<i class="fa-solid fa-chevron-right"></i>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</div>
 </div>
 </body>
 </html>

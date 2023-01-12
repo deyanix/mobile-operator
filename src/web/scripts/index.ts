@@ -4,6 +4,7 @@ import "@fontsource/nunito";
 import '@popperjs/core';
 import 'bootstrap';
 
+import _ from 'lodash';
 import $ from 'jquery';
 import {Modal, Collapse} from 'bootstrap';
 import axios from "axios";
@@ -17,6 +18,30 @@ function wait(time: number): Promise<void> {
 		setTimeout(() => resolve(), time);
 	});
 }
+
+$(function () {
+	$('#page-size-select').on('change', function () {
+		const pageSize = $(this).val();
+		if (pageSize === null) {
+			return;
+		}
+
+		const url = new URL(window.location.href);
+		url.searchParams.set('pageSize', String(pageSize));
+		window.location.assign(url);
+	})
+
+	$('#mobile-select').on('change', function () {
+		const mobile = $(this).val();
+		if (mobile === null) {
+			return;
+		}
+
+		const url = new URL(window.location.href);
+		url.searchParams.set('mobile', String(mobile));
+		window.location.assign(url);
+	})
+});
 
 $(function () {
 	const $navbar = $("#navbarNav");
@@ -93,11 +118,14 @@ $(function () {
 
 		const offerId = parseInt(offerIdText);
 		try {
-			const [response] = await Promise.all([
+			const response = await Promise.all([
 				api.post('/offers/create',{ offerId }),
 				wait(500)
 			]);
-			console.log(response.data)
+
+			const url = new URL(window.location.href);
+			url.pathname = '/user/agreements';
+			window.location.assign(url);
 		} finally {
 			$modalSubmitSpinner.hide();
 			$modalSubmit.prop('disabled', false);

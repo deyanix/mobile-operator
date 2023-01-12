@@ -15,6 +15,7 @@
     "file-loader": "^6.2.0",
     "fork-ts-checker-webpack-plugin": "^7.2.1",
     "jquery": "^3.6.3",
+    "lodash": "^4.17.21",
     "mini-css-extract-plugin": "^2.6.1",
     "npm": "^9.2.0",
     "style-loader": "^3.3.1",
@@ -29,6 +30,7 @@
     "@parcel/transformer-sass": "2.8.2",
     "@types/bootstrap": "^5.2.6",
     "@types/jquery": "^3.5.16",
+    "@types/lodash": "^4.14.191",
     "buffer": "^5.5.0",
     "parcel": "^2.8.2"
   },

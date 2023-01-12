@@ -6,8 +6,8 @@ public class UserAgreementCriteria {
 	private int pageSize = 10;
 	private int page = 0;
 	private Boolean mobile = null;
-	private String orderBy = "";
-	private String orderDirection = "ASC";
+	private String orderBy = "signingDate";
+	private String orderDirection = "DESC";
 
 	public int getPageSize() {
 		return pageSize;
