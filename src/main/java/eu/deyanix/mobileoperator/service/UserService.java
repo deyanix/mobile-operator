@@ -8,6 +8,7 @@ import eu.deyanix.mobileoperator.repository.AddressRepository;
 import eu.deyanix.mobileoperator.repository.AgreementRepository;
 import eu.deyanix.mobileoperator.repository.CustomerRepository;
 import eu.deyanix.mobileoperator.repository.UserRepository;
+import eu.deyanix.mobileoperator.security.AppAuthenticationProvider;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -67,10 +68,20 @@ public class UserService {
 
 	public void updateCustomer(Customer customer) {
 		User user = getCurrentUser();
+		if (user.getCustomer() != null) {
+			customer.setId(user.getCustomer().getId());
+			if (user.getCustomer().getAddress() != null) {
+				customer.getAddress().setId(user.getCustomer().getAddress().getId());
+			}
+		}
 
-		customer.getAddress().setId(user.getCustomer().getAddress().getId());
 		addressRepository.save(customer.getAddress());
-		customer.setId(user.getCustomer().getId());
 		customerRepository.save(customer);
+
+		if (user.getCustomer() == null) {
+			user.setCustomer(customer);
+			userRepository.save(user);
+		}
+		AppAuthenticationProvider.reloadToken(user);
 	}
 }

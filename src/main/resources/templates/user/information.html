@@ -6,16 +6,16 @@
 	  layout:decorate="~{layout/user}">
 <body>
 	<div layout:fragment="content">
-		<div th:if="${user.getCustomer() == null}">
-			Nie skonfigurowano dla konta danych abonanta. Skontaktuj się z administracją, aby wprowadzić dane.
+		<div class="d-flex justify-content-between align-items-center">
+			<div class="h6">Dane abonanta</div>
+			<a class="btn btn-outline-primary" th:href="@{/user/edit}">
+				<i class="fa-solid fa-pen-to-square"></i>
+			</a>
+		</div>
+		<div th:if="${customer == null}">
+			Nie skonfigurowano dla konta danych abonanta.
 		</div>
 		<div th:if="${customer != null}" class="mb-2">
-			<div class="d-flex justify-content-between align-items-center">
-				<div class="h6">Dane abonanta</div>
-				<a class="btn btn-outline-primary" th:href="@{/user/edit}">
-					<i class="fa-solid fa-pen-to-square"></i>
-				</a>
-			</div>
 			<div>
 				<span th:text="${user.getCustomer().getFirstName().toUpperCase()}"></span>
 				<span th:text="${user.getCustomer().getLastName().toUpperCase()}"></span>
@@ -32,7 +32,7 @@
 		<div th:if="${address != null}" class="mb-2">
 			<div class="h6">Adres</div>
 			<div>
-				<span th:text="${address.street ?: address.city}"></span>
+				<span th:text="${address.street != null && !address.street.isBlank() ? address.street : address.city}"></span>
 				<span th:text="${address.number}"></span>
 			</div>
 			<div>

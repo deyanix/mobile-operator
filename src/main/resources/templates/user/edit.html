@@ -68,8 +68,15 @@
 				<label for="city-input">Miejscowość</label>
 			</div>
 		</div>
+		<div th:if="${errors != null}" class="col-12">
+			<div class="alert alert-danger">
+				<ul class="mb-0">
+					<li th:each="error : ${errors.getAllErrors()}" th:text="${error.getDefaultMessage()}"></li>
+				</ul>
+			</div>
+		</div>
 		<div class="col-12 text-end">
-			<a class="btn btn-secondary" th:href="@{/user}">Anuluj</a>
+			<a class="btn btn-secondary" th:href="@{/templates/user}">Anuluj</a>
 			<button type="submit" class="btn btn-primary">Zapisz</button>
 		</div>
 	</div>

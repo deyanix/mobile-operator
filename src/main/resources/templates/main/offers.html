@@ -14,8 +14,8 @@
 	</div>
 	<div class="container py-4">
 		<div class="row g-3">
-			<div th:each="offer: ${offers}" class="col-12 col-md-6 col-lg-4 offer-card-container">
-				<div layout:insert="~{offer-card :: offerCard(offer=${offer})}"></div>
+			<div th:each="offer : ${offers}" class="col-12 col-md-6 col-lg-4 offer-card-container">
+				<div layout:insert="~{main/components/offer-card :: offerCard(offer=${offer})}"></div>
 			</div>
 		</div>
 	</div>
@@ -24,8 +24,8 @@
 	</div>
 	<div class="container py-4">
 		<div class="row g-3">
-			<div th:each="offer: ${mobileOffers}" class="col-12 col-md-6 col-lg-4 offer-card-container">
-				<div layout:insert="~{offer-card :: offerCard(offer=${offer})}"></div>
+			<div th:each="offer : ${mobileOffers}" class="col-12 col-md-6 col-lg-4 offer-card-container">
+				<div layout:insert="~{main/components/offer-card :: offerCard(offer=${offer})}"></div>
 			</div>
 		</div>
 	</div>

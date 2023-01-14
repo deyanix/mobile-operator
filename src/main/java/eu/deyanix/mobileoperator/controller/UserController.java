@@ -4,19 +4,16 @@ import eu.deyanix.mobileoperator.dto.UserAgreementCriteria;
 import eu.deyanix.mobileoperator.entity.Address;
 import eu.deyanix.mobileoperator.entity.Customer;
 import eu.deyanix.mobileoperator.entity.User;
-import eu.deyanix.mobileoperator.repository.AddressRepository;
-import eu.deyanix.mobileoperator.repository.AgreementRepository;
-import eu.deyanix.mobileoperator.repository.CustomerRepository;
-import eu.deyanix.mobileoperator.repository.UserRepository;
 import eu.deyanix.mobileoperator.service.UserService;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
+import javax.validation.Valid;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
@@ -32,33 +29,37 @@ public class UserController {
 	public String user(Model model) {
 		User user = userService.getCurrentUser();
 		Customer customer = user.getCustomer();
-		Address address = Optional.of(customer)
+		Address address = Optional.ofNullable(customer)
 				.map(Customer::getAddress)
 				.orElse(null);
 
 		model.addAttribute("user", user);
 		model.addAttribute("customer", customer);
 		model.addAttribute("address", address);
-		return "user";
+		return "user/information";
 	}
 
 	@GetMapping("/user/edit")
 	public String editUser(Model model) {
 		User user = userService.getCurrentUser();
-		model.addAttribute("customer", user.getCustomer());
-		return "edit-user";
+		model.addAttribute("customer", Optional.ofNullable(user.getCustomer()).orElse(new Customer()));
+		return "user/edit";
 	}
 
 	@PostMapping("/user/edit")
-	public String updateUser(Customer customer) {
+	public String updateUser(@ModelAttribute("customer") @Valid Customer customer, BindingResult result, Model model) {
+		if (result.hasErrors()) {
+			model.addAttribute("errors", result);
+			return "user/edit";
+		}
 		userService.updateCustomer(customer);
-		return "redirect:/";
+		return "redirect:/user";
 	}
 
 	@GetMapping("/user/agreements")
 	public String getAgreements(Model model, UserAgreementCriteria criteria) {
 		model.addAttribute("criteria", criteria);
 		model.addAttribute("agreements", userService.getAgreements(criteria));
-		return "user-agreements";
+		return "user/agreements";
 	}
 }

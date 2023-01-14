@@ -19,13 +19,13 @@
 				<span class="navbar-toggler-icon"></span>
 			</button>
 			<div class="collapse navbar-collapse" id="main-navbar-toggler">
-				<a class="navbar-brand text-primary" href="#">
+				<div class="navbar-brand text-primary text-center text">
 					<i class="fa-solid fa-phone-volume"></i>
 					Telecom
-				</a>
+				</div>
 				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 					<li class="nav-item">
-						<a class="nav-link" th:href="@{/offers}">Oferty</a>
+						<a class="nav-link" th:href="@{/}">Oferty</a>
 					</li>
 				</ul>
 			</div>
@@ -42,13 +42,25 @@
 				<ul class="dropdown-menu dropdown-menu-end m-0">
 					<li>
 						<a class="dropdown-item" th:href="@{/user}">
-							<i class="fa-solid fa-user"></i>
+							<span class="dropdown-icon">
+								<i class="fa-solid fa-user"></i>
+							</span>
 							Moje konto
 						</a>
 					</li>
 					<li>
+						<a class="dropdown-item" th:href="@{/admin}">
+							<span class="dropdown-icon">
+								<i class="fa-solid fa-gears"></i>
+							</span>
+							Panel administracyjny
+						</a>
+					</li>
+					<li>
 						<a class="dropdown-item" th:href="@{/logout}">
-							<i class="fa-solid fa-right-from-bracket"></i>
+							<span class="dropdown-icon">
+								<i class="fa-solid fa-right-from-bracket"></i>
+							</span>
 							Wyloguj
 						</a>
 					</li>
@@ -57,10 +69,6 @@
 		</div>
 	</nav>
 	<main id="content" layout:fragment="content"></main>
-
-<!--	<footer class="footer">-->
-<!--		<p class="text-muted">Place sticky footer content here.</p>-->
-<!--	</footer>-->
 	<script th:src="@{/assets/index.js}"></script>
 </body>
 </html>

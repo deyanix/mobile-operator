@@ -59,10 +59,13 @@
 			</div>
 		</div>
 	</th:block>
-	<div sec:authorize="hasRole('USER')" class="offer-card-section text-center">
+	<div sec:authorize="hasRole('CUSTOMER')" class="offer-card-section text-center">
 		<button class="offer-choose btn btn-primary px-5">Wybierz</button>
 	</div>
-	<div sec:authorize="!hasRole('USER')" class="offer-card-section text-center text-black-50">
+	<div sec:authorize="!hasRole('CUSTOMER') && !hasRole('USER')" class="offer-card-section text-center text-black-50">
 		Zaloguj się, aby wybrać ofertę
+	</div>
+	<div sec:authorize="!hasRole('CUSTOMER') && hasRole('USER')" class="offer-card-section text-center text-black-50">
+		Wprowadź dane abonenta, aby wybrać ofertę
 	</div>
 </div>

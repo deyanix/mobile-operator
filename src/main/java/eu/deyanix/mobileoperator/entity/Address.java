@@ -1,6 +1,7 @@
 package eu.deyanix.mobileoperator.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "ADDRESSES")
@@ -11,12 +12,15 @@ public class Address {
 	@Column
 	private String street;
 	@Column(nullable = false)
+	@NotBlank(message = "Numer budynku nie może być pusty")
 	private String buildingNumber;
 	@Column
 	private String apartmentNumber;
 	@Column(nullable = false)
+	@NotBlank(message = "Kod pocztowy nie może być pusty")
 	private String postalCode;
 	@Column(nullable = false)
+	@NotBlank(message = "Miejscowość nie może być pusta")
 	private String city;
 
 	public void setId(Long id) {
@@ -68,7 +72,7 @@ public class Address {
 	}
 
 	public String getNumber() {
-		if (apartmentNumber != null && !apartmentNumber.isEmpty()) {
+		if (apartmentNumber != null && !apartmentNumber.isBlank()) {
 			return String.join("/", buildingNumber, apartmentNumber);
 		}
 		return buildingNumber;

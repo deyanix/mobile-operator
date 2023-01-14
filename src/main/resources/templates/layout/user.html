@@ -24,7 +24,7 @@
 						</div>
 						<div class="col">
 							<div th:text="${#authentication.getName()}" class="user-username"></div>
-							<div th:text="${#authentication.getPrincipal().getCustomer().getFirstName()} + ' ' + ${#authentication.getPrincipal().getCustomer().getLastName()}"
+							<div th:if="${#authentication.getPrincipal().getCustomer() != null}" th:text="${#authentication.getPrincipal().getCustomer().getFirstName()} + ' ' + ${#authentication.getPrincipal().getCustomer().getLastName()}"
 								 class="user-name"></div>
 						</div>
 						<button class="btn btn-outline-primary d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">

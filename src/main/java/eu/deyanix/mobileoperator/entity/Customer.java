@@ -1,6 +1,13 @@
 package eu.deyanix.mobileoperator.entity;
 
 import jakarta.persistence.*;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
@@ -11,16 +18,26 @@ public class Customer {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column
+	@Column(nullable = false)
+	@NotBlank(message = "Imię nie może być puste")
 	private String firstName;
-	@Column
+	@Column(nullable = false)
+	@NotBlank(message = "Nazwisko nie może być puste")
 	private String lastName;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Temporal(TemporalType.DATE)
+	@Column(nullable = false)
+	@NotNull(message = "Data urodzenia nie może być pusta")
+	@Past(message = "Data urodzenia musi być z przeszłości")
 	private Date birthDate;
-	@Column
+	@Column(nullable = false)
+	@NotBlank(message = "PESEL nie może być pusty")
+	@Size(min = 11, max = 11, message = "PESEL musi mieć 11 znaków")
+	@Pattern(regexp = "\\d+", message = "PESEL musi się składać z cyfr")
 	private String pesel;
-	@ManyToOne
+	@ManyToOne(optional = false)
+	@Valid
+	@NotNull
 	private Address address;
 
 	public void setId(Long id) {

@@ -1,5 +1,6 @@
 package eu.deyanix.mobileoperator.security;
 
+import eu.deyanix.mobileoperator.entity.Authority;
 import eu.deyanix.mobileoperator.entity.User;
 import eu.deyanix.mobileoperator.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
@@ -9,15 +10,45 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 @Component
 public class AppAuthenticationProvider implements AuthenticationProvider {
+    public static void reloadToken(User user) {
+        SecurityContextHolder
+                .getContext()
+                .setAuthentication(AppAuthenticationProvider.createToken(user));
+    }
+
+    public static Authentication createToken(User user) {
+        Set<GrantedAuthority> authorities = new HashSet<>(user.getAuthorities());
+        if (user.getCustomer() != null) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_CUSTOMER"));
+        }
+
+        boolean hasAdmin = authorities.stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch("ROLE_ADMINISTRATOR"::equals);
+
+        if (hasAdmin) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        }
+
+        return new UsernamePasswordAuthenticationToken(user, user.getPassword(), authorities);
+    }
+
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
@@ -29,12 +60,17 @@ public class AppAuthenticationProvider implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String name = authentication.getName();
-        String password = authentication.getCredentials().toString();
-        User user = userRepository.findByUsername(name).orElseThrow();
+        String password = authentication
+                .getCredentials()
+                .toString();
+        User user = userRepository
+                .findByUsername(name)
+                .orElseThrow(() -> new BadCredentialsException("Niepoprawne dane logowania"));
+
         if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new BadCredentialsException("Bad credentials.");
+            throw new BadCredentialsException("Niepoprawne dane logowania");
         }
-        return new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities());
+        return createToken(user);
     }
 
     @Override
