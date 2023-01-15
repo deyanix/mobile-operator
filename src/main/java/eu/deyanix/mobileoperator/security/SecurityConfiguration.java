@@ -8,6 +8,8 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 
@@ -17,13 +19,9 @@ import javax.sql.DataSource;
 @EnableWebSecurity
 public class SecurityConfiguration {
     private AppAuthenticationProvider authenticationProvider;
-    private UserRepository userRepository;
-    private DataSource dataSource;
 
-    public SecurityConfiguration(AppAuthenticationProvider authenticationProvider, UserRepository userRepository, DataSource dataSource) {
+    public SecurityConfiguration(AppAuthenticationProvider authenticationProvider) {
         this.authenticationProvider = authenticationProvider;
-        this.userRepository = userRepository;
-        this.dataSource = dataSource;
     }
 
     @Autowired
@@ -43,6 +41,11 @@ public class SecurityConfiguration {
         DefaultWebSecurityExpressionHandler expressionHandler = new DefaultWebSecurityExpressionHandler();
         expressionHandler.setRoleHierarchy(roleHierarchy());
         return expressionHandler;
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return authenticationProvider.getPasswordEncoder();
     }
 
     @Bean

@@ -8,7 +8,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CustomerRepository extends CrudRepository<Customer, Long> {
-//	@Modifying
-//	@Query("DELETE FROM Customer c where c = ?1")
-//	void delete(Customer customer);
 }

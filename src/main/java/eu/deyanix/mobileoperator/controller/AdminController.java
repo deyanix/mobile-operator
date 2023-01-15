@@ -2,10 +2,13 @@ package eu.deyanix.mobileoperator.controller;
 
 import eu.deyanix.mobileoperator.criteria.AgreementCriteria;
 import eu.deyanix.mobileoperator.criteria.UserCriteria;
+import eu.deyanix.mobileoperator.dto.UserCreation;
 import eu.deyanix.mobileoperator.entity.Address;
 import eu.deyanix.mobileoperator.entity.Agreement;
 import eu.deyanix.mobileoperator.entity.Customer;
 import eu.deyanix.mobileoperator.entity.User;
+import eu.deyanix.mobileoperator.group.CreateUser;
+import eu.deyanix.mobileoperator.group.UpdateUser;
 import eu.deyanix.mobileoperator.service.AgreementService;
 import eu.deyanix.mobileoperator.service.CustomerService;
 import eu.deyanix.mobileoperator.service.UserService;
@@ -14,12 +17,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.Optional;
@@ -48,11 +54,6 @@ public class AdminController {
 		return "admin/user/users";
 	}
 
-	@RequestMapping("/admin/users/create")
-	public String createUser(Model model) {
-		return "admin/user/edit-user";
-	}
-
 	@RequestMapping("/admin/users/{id}")
 	public String previewUser(Model model, @PathVariable Long id) {
 		User user = userService.getUser(id)
@@ -68,9 +69,66 @@ public class AdminController {
 		return "admin/user/user";
 	}
 
-	@GetMapping("/admin/users/{id}/edit")
-	public String editUser(Model model, @PathVariable Long id) {
+	@RequestMapping("/admin/users/create")
+	public String createUser(Model model) {
+		model.addAttribute("user", new User());
+		model.addAttribute("authorities", userService.getAuthorities());
 		return "admin/user/edit-user";
+	}
+
+	public ModelAndView createEditUserView(User user) {
+		ModelAndView model = new ModelAndView("admin/user/edit-user");
+		model.addObject("user", user);
+		model.addObject("authorities", userService.getAuthorities());
+		return model;
+	}
+
+	@PostMapping("/admin/users/create")
+	public ModelAndView createUser(@RequestBody @ModelAttribute("creation") @Validated(CreateUser.class) UserCreation creation,
+							 BindingResult result) {
+		User user = userService.mapCreationToUser(creation);
+		userService.validateCreation(user, creation, result);
+		if (result.hasErrors()) {
+			ModelAndView modelAndView = createEditUserView(user);
+			modelAndView.addObject("errors", result.getAllErrors());
+			return modelAndView;
+		}
+		userService.saveUser(user);
+		return new ModelAndView("redirect:/admin/users");
+	}
+
+	@GetMapping("/admin/users/{id}/edit")
+	public ModelAndView updateUser(Model model, @PathVariable Long id) {
+		return userService.getUser(id)
+				.map(this::createEditUserView)
+				.orElseThrow(EntityNotFoundException::new);
+	}
+
+	@PostMapping("/admin/users/{userId}/edit")
+	public String updateUser(@RequestBody @ModelAttribute("creation") @Validated(UpdateUser.class) UserCreation creation,
+							 BindingResult result, Model model,
+							 @PathVariable Long userId) {
+		User user = userService.getUser(userId)
+				.map((u) -> userService.mapCreationToUser(creation, u))
+				.orElseThrow(EntityNotFoundException::new);
+		userService.validateCreation(user, creation, result);
+		if (result.hasErrors()) {
+			model.addAttribute("user", user);
+			model.addAttribute("authorities", userService.getAuthorities());
+			model.addAttribute("errors", result);
+			return "admin/user/edit-user";
+		}
+
+		userService.saveUser(user);
+		return String.format("redirect:/admin/users/%d", userId);
+	}
+
+	@PostMapping("/admin/users/{id}/delete")
+	public String deleteUser(@PathVariable Long id) {
+		User user = userService.getUser(id).orElseThrow(EntityNotFoundException::new);
+		userService.deleteUser(user);
+
+		return "redirect:/admin/users";
 	}
 
 	@GetMapping("/admin/users/{id}/customer")
@@ -82,7 +140,11 @@ public class AdminController {
 	}
 
 	@PostMapping("/admin/users/{userId}/customer")
-	public String updateCustomer(@RequestBody @ModelAttribute("customer") @Valid Customer customer, BindingResult result, Model model, @PathVariable Long userId) {
+	public String updateCustomer(
+			@RequestBody @ModelAttribute("customer") @Valid Customer customer,
+			BindingResult result, Model model,
+			@PathVariable Long userId
+	) {
 		User user = userService.getUser(userId).orElseThrow(EntityNotFoundException::new);
 		model.addAttribute("user", user);
 		if (result.hasErrors()) {

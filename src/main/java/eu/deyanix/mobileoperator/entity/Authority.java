@@ -14,8 +14,9 @@ public class Authority implements GrantedAuthority {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
-	@Column
+	@Column(nullable = false)
+	private String name;
+	@Column(nullable = false, unique = true)
 	private String authority;
 
 	public void setId(Long id) {
@@ -34,10 +35,19 @@ public class Authority implements GrantedAuthority {
 		this.authority = authority;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	@Override
 	public String toString() {
 		return "Authority{" +
 				"id=" + id +
+				", name='" + name + '\'' +
 				", authority='" + authority + '\'' +
 				'}';
 	}

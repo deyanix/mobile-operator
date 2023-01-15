@@ -22,12 +22,12 @@ import java.util.Set;
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    @Column
+    @Column(nullable = false, unique = true)
     private String username;
 
-    @Column
+    @Column(nullable = false)
     private String password;
 
     @OneToOne
@@ -35,13 +35,13 @@ public class User implements UserDetails {
     private Customer customer;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    private Set<Authority> authorities;
+    private Set<Authority> authorities = Set.of();
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -67,6 +67,10 @@ public class User implements UserDetails {
 
     public void setCustomer(Customer customer) {
         this.customer = customer;
+    }
+
+    public void setAuthorities(Set<Authority> authorities) {
+        this.authorities = authorities;
     }
 
     public Set<Authority> getAuthorities() {

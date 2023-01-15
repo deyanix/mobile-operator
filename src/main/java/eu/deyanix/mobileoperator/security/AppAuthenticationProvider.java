@@ -53,6 +53,10 @@ public class AppAuthenticationProvider implements AuthenticationProvider {
         this.userRepository = userRepository;
     }
 
+    public PasswordEncoder getPasswordEncoder() {
+        return passwordEncoder;
+    }
+
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String name = authentication.getName();
