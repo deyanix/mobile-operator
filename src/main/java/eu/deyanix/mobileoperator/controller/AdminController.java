@@ -2,23 +2,37 @@ package eu.deyanix.mobileoperator.controller;
 
 import eu.deyanix.mobileoperator.criteria.AgreementCriteria;
 import eu.deyanix.mobileoperator.criteria.UserCriteria;
+import eu.deyanix.mobileoperator.entity.Address;
 import eu.deyanix.mobileoperator.entity.Agreement;
+import eu.deyanix.mobileoperator.entity.Customer;
 import eu.deyanix.mobileoperator.entity.User;
 import eu.deyanix.mobileoperator.service.AgreementService;
+import eu.deyanix.mobileoperator.service.CustomerService;
 import eu.deyanix.mobileoperator.service.UserService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.validation.Valid;
+import java.util.Optional;
 
 @Controller
 public class AdminController {
 	private AgreementService agreementService;
+	private CustomerService customerService;
 	private UserService userService;
 
-	public AdminController(AgreementService agreementService, UserService userService) {
+	public AdminController(AgreementService agreementService, CustomerService customerService, UserService userService) {
 		this.agreementService = agreementService;
+		this.customerService = customerService;
 		this.userService = userService;
 	}
 
@@ -40,18 +54,51 @@ public class AdminController {
 	}
 
 	@RequestMapping("/admin/users/{id}")
-	public String previewUser(Model model) {
+	public String previewUser(Model model, @PathVariable Long id) {
+		User user = userService.getUser(id)
+				.orElseThrow(EntityNotFoundException::new);
+		Customer customer = user.getCustomer();
+		Address address = Optional.ofNullable(customer)
+				.map(Customer::getAddress)
+				.orElse(null);
+
+		model.addAttribute("user", user);
+		model.addAttribute("customer", customer);
+		model.addAttribute("address", address);
 		return "admin/user/user";
 	}
 
-	@RequestMapping("/admin/users/{id}/edit")
-	public String editUser(Model model) {
+	@GetMapping("/admin/users/{id}/edit")
+	public String editUser(Model model, @PathVariable Long id) {
 		return "admin/user/edit-user";
 	}
 
-	@RequestMapping("/admin/users/{id}/customer")
-	public String editCustomer() {
+	@GetMapping("/admin/users/{id}/customer")
+	public String editCustomer(Model model, @PathVariable Long id) {
+		User user = userService.getUser(id).orElseThrow(EntityNotFoundException::new);
+		model.addAttribute("user", user);
+		model.addAttribute("customer", Optional.ofNullable(user.getCustomer()).orElse(new Customer()));
 		return "admin/user/edit-customer";
+	}
+
+	@PostMapping("/admin/users/{userId}/customer")
+	public String updateCustomer(@RequestBody @ModelAttribute("customer") @Valid Customer customer, BindingResult result, Model model, @PathVariable Long userId) {
+		User user = userService.getUser(userId).orElseThrow(EntityNotFoundException::new);
+		model.addAttribute("user", user);
+		if (result.hasErrors()) {
+			model.addAttribute("errors", result);
+			return "admin/user/edit-customer";
+		}
+		customerService.updateUserCustomer(user, customer);
+		return String.format("redirect:/admin/users/%d", userId);
+	}
+
+	@PostMapping("/admin/users/{id}/delete-customer")
+	public String deleteCustomer(@PathVariable Long id) {
+		User user = userService.getUser(id).orElseThrow(EntityNotFoundException::new);
+		customerService.deleteCustomer(user);
+
+		return String.format("redirect:/admin/users/%d", id);
 	}
 
 	@RequestMapping("/admin/agreements")

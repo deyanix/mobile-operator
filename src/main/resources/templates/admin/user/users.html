@@ -39,10 +39,16 @@
 						</div>
 					</div>
 				</th>
+				<th></th>
 			</tr>
 			<tr th:each="user : ${users}" th:object="${user}">
 				<td th:text="*{username}"></td>
 				<td th:text="*{customer?.fullName}"></td>
+				<td class="text-center">
+					<a th:href="@{/admin/users/{id}(id=${user.id})}" class="btn btn-outline-primary btn-sm">
+						<i class="fa-solid fa-chevron-right"></i>
+					</a>
+				</td>
 			</tr>
 		</table>
 	</div>

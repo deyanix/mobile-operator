@@ -1,12 +1,22 @@
 package eu.deyanix.mobileoperator.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Entity
 @Table(name = "AGREEMENTS")
@@ -25,7 +35,7 @@ public class Agreement {
     @ManyToOne(optional = false)
     private Offer offer;
     @ManyToOne(optional = false)
-    @NotFound(action = NotFoundAction.IGNORE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Customer customer;
 
     public void setId(Long id) {
@@ -40,8 +50,8 @@ public class Agreement {
         return signingDate;
     }
 
-    public void setSigningDate(LocalDate sigingDate) {
-        this.signingDate = sigingDate;
+    public void setSigningDate(LocalDate signingDate) {
+        this.signingDate = signingDate;
     }
 
     public LocalDate getExpirationDate() {

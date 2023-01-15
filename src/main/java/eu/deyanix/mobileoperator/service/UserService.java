@@ -1,14 +1,8 @@
 package eu.deyanix.mobileoperator.service;
 
-import eu.deyanix.mobileoperator.criteria.UserAgreementCriteria;
 import eu.deyanix.mobileoperator.criteria.UserCriteria;
-import eu.deyanix.mobileoperator.entity.Customer;
 import eu.deyanix.mobileoperator.entity.User;
-import eu.deyanix.mobileoperator.repository.AddressRepository;
-import eu.deyanix.mobileoperator.repository.AgreementRepository;
-import eu.deyanix.mobileoperator.repository.CustomerRepository;
 import eu.deyanix.mobileoperator.repository.UserRepository;
-import eu.deyanix.mobileoperator.security.AppAuthenticationProvider;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -17,9 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 
 @Service
 public class UserService {
@@ -34,9 +26,12 @@ public class UserService {
 				.filter(User.class::isInstance)
 				.map(User.class::cast)
 				.map(User::getId)
-				.map(userRepository::findById)
-				.flatMap(Function.identity())
+				.flatMap(this::getUser)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
+	}
+
+	public Optional<User> getUser(Long id) {
+		return userRepository.findById(id);
 	}
 
 	private Sort createUsersSort(UserCriteria criteria) {

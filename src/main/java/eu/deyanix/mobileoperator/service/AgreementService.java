@@ -2,7 +2,6 @@ package eu.deyanix.mobileoperator.service;
 
 import eu.deyanix.mobileoperator.criteria.AgreementCriteria;
 import eu.deyanix.mobileoperator.criteria.UserAgreementCriteria;
-import eu.deyanix.mobileoperator.criteria.UserCriteria;
 import eu.deyanix.mobileoperator.entity.Agreement;
 import eu.deyanix.mobileoperator.entity.User;
 import eu.deyanix.mobileoperator.repository.AgreementRepository;

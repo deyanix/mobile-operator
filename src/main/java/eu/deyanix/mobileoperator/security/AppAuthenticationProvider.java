@@ -1,13 +1,10 @@
 package eu.deyanix.mobileoperator.security;
 
-import eu.deyanix.mobileoperator.entity.Authority;
 import eu.deyanix.mobileoperator.entity.User;
 import eu.deyanix.mobileoperator.repository.UserRepository;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,34 +12,33 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 @Component
 public class AppAuthenticationProvider implements AuthenticationProvider {
-    public static void reloadToken(User user) {
-        SecurityContextHolder
-                .getContext()
-                .setAuthentication(AppAuthenticationProvider.createToken(user));
+    public static void reloadToken(User newUser) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = auth.getPrincipal();
+        if (principal instanceof User user) {
+            if (user.getId() != newUser.getId()) {
+                return;
+            }
+        }
+
+        SecurityContextHolder.getContext()
+                .setAuthentication(AppAuthenticationProvider.createToken(newUser));
     }
 
     public static Authentication createToken(User user) {
         Set<GrantedAuthority> authorities = new HashSet<>(user.getAuthorities());
         if (user.getCustomer() != null) {
             authorities.add(new SimpleGrantedAuthority("ROLE_CUSTOMER"));
-        }
+        };
 
-        boolean hasAdmin = authorities.stream()
-                .map(GrantedAuthority::getAuthority)
-                .anyMatch("ROLE_ADMINISTRATOR"::equals);
-
-        if (hasAdmin) {
+        if (user.hasAuthority("ROLE_ADMINISTRATOR")) {
             authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
         }
 

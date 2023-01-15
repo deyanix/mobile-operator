@@ -18,6 +18,11 @@ $fa-font-path: "../node_modules/@fortawesome/fontawesome-free/webfonts";
   }
 }
 
+a {
+  text-decoration: none;
+  font-weight: 600;
+}
+
 .sort-active {
   color: $primary;
   text-decoration: none;

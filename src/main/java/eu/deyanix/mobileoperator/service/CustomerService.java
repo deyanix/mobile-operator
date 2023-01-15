@@ -23,22 +23,34 @@ public class CustomerService {
 		this.userService = userService;
 	}
 
-	public void updateCurrentCustomer(Customer customer) {
-		User user = userService.getCurrentUser();
+	public void updateUserCustomer(User user, Customer newCustomer) {
 		if (user.getCustomer() != null) {
-			customer.setId(user.getCustomer().getId());
+			newCustomer.setId(user.getCustomer().getId());
 			if (user.getCustomer().getAddress() != null) {
-				customer.getAddress().setId(user.getCustomer().getAddress().getId());
+				newCustomer.getAddress().setId(user.getCustomer().getAddress().getId());
 			}
 		}
 
-		addressRepository.save(customer.getAddress());
-		customerRepository.save(customer);
-
+		addressRepository.save(newCustomer.getAddress());
+		customerRepository.save(newCustomer);
 		if (user.getCustomer() == null) {
-			user.setCustomer(customer);
+			user.setCustomer(newCustomer);
 			userRepository.save(user);
 		}
 		AppAuthenticationProvider.reloadToken(user);
+	}
+
+	public void updateCurrentCustomer(Customer customer) {
+		User user = userService.getCurrentUser();
+		updateUserCustomer(user, customer);
+	}
+
+	public void deleteCustomer(User user) {
+		Customer customer = user.getCustomer();
+		user.setCustomer(null);
+		AppAuthenticationProvider.reloadToken(user);
+
+		userRepository.save(user);
+		customerRepository.delete(customer);
 	}
 }

@@ -14,25 +14,25 @@
 		<div class="col-12 col-md-3">
 			<div class="form-floating">
 				<input class="form-control" id="first-name-input" placeholder="Imię" th:field="*{firstName}"/>
-				<label for="first-name-input">Imię</label>
+				<label for="first-name-input">Imię *</label>
 			</div>
 		</div>
 		<div class="col-12 col-md-3">
 			<div class="form-floating">
 				<input class="form-control" id="last-name-input" placeholder="Nazwisko" th:field="*{lastName}"/>
-				<label for="last-name-input">Nazwisko</label>
+				<label for="last-name-input">Nazwisko *</label>
 			</div>
 		</div>
 		<div class="col-12 col-md-3">
 			<div class="form-floating">
 				<input class="form-control" id="pesel-input" placeholder="PESEL" th:field="*{pesel}"/>
-				<label for="pesel-input">PESEL</label>
+				<label for="pesel-input">PESEL *</label>
 			</div>
 		</div>
 		<div class="col-12 col-md-3">
 			<div class="form-floating">
 				<input class="form-control" id="birth-date-input" type="date" placeholder="Data urodzenia" th:field="*{birthDate}"/>
-				<label for="birth-date-input">Data urodzenia</label>
+				<label for="birth-date-input">Data urodzenia *</label>
 			</div>
 		</div>
 		<div class="col-12">
@@ -47,7 +47,7 @@
 		<div class="col-12 col-md-3">
 			<div class="form-floating">
 				<input class="form-control" id="building-input" placeholder="Nr budynku" th:field="*{address.buildingNumber}"/>
-				<label for="building-input">Nr budynku</label>
+				<label for="building-input">Nr budynku *</label>
 			</div>
 		</div>
 		<div class="col-12 col-md-3">
@@ -59,13 +59,13 @@
 		<div class="col-12 col-md-3">
 			<div class="form-floating">
 				<input class="form-control" id="postal-code-input" placeholder="Kod pocztowy" th:field="*{address.postalCode}"/>
-				<label for="postal-code-input">Kod pocztowy</label>
+				<label for="postal-code-input">Kod pocztowy *</label>
 			</div>
 		</div>
 		<div class="col-12 col-md-9">
 			<div class="form-floating">
 				<input class="form-control" id="city-input" placeholder="Miejscowość" th:field="*{address.city}"/>
-				<label for="city-input">Miejscowość</label>
+				<label for="city-input">Miejscowość *</label>
 			</div>
 		</div>
 		<div th:if="${errors != null}" class="col-12">
@@ -76,7 +76,7 @@
 			</div>
 		</div>
 		<div class="col-12 text-end">
-			<a class="btn btn-secondary" th:href="@{/templates/user}">Anuluj</a>
+			<a class="btn btn-secondary" th:href="@{/user}">Anuluj</a>
 			<button type="submit" class="btn btn-primary">Zapisz</button>
 		</div>
 	</div>

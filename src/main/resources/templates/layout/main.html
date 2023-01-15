@@ -48,7 +48,7 @@
 							Moje konto
 						</a>
 					</li>
-					<li>
+					<li sec:authorize="hasRole('ADMINISTRATOR')">
 						<a class="dropdown-item" th:href="@{/admin}">
 							<span class="dropdown-icon">
 								<i class="fa-solid fa-gears"></i>

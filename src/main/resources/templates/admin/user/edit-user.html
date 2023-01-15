@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="pl"
+	  xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:th="http://www.thymeleaf.org"
+	  layout:decorate="~{layout/admin}">
+<body>
+<div layout:fragment="content">
+	<form method="POST" th:object="${customer}">
+		<div class="row g-2">
+			<div class="col-12">
+				<div class="h6">Dane użytkownika</div>
+			</div>
+			<div class="col-12 col-md-3">
+				<div class="form-floating">
+					<input class="form-control" id="first-name-input" placeholder="Imię" th:field="*{firstName}"/>
+					<label for="first-name-input">Imię *</label>
+				</div>
+			</div>
+			<div class="col-12 col-md-3">
+				<div class="form-floating">
+					<input class="form-control" id="last-name-input" placeholder="Nazwisko" th:field="*{lastName}"/>
+					<label for="last-name-input">Nazwisko *</label>
+				</div>
+			</div>
+			<div th:if="${errors != null}" class="col-12">
+				<div class="alert alert-danger">
+					<ul class="mb-0">
+						<li th:each="error : ${errors.getAllErrors()}" th:text="${error.getDefaultMessage()}"></li>
+					</ul>
+				</div>
+			</div>
+			<div class="col-12 text-end">
+				<a class="btn btn-secondary" th:href="@{/admin/users/{id}(id=${user.id})}">Anuluj</a>
+				<button type="submit" class="btn btn-primary">Zapisz</button>
+			</div>
+		</div>
+	</form>
+</div>
+</body>
+</html>
