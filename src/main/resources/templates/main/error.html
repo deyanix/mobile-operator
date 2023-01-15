@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="pl"
+	  xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:th="http://www.thymeleaf.org"
+	  layout:decorate="~{layout/main}">
+<head>
+	<title>Oferty</title>
+</head>
+<body>
+<div layout:fragment="content">
+	<div class="text-center pt-5 pb-4">
+		<div class="h2 text-primary">
+			Upss... Wystąpił błąd
+		</div>
+		<div class="d-flex align-items-end justify-content-center gap-2 mb-4">
+			<div th:text="${status?.value()}" class="h4"></div>
+			<div th:text="${status?.reasonPhrase}" class="h4"></div>
+		</div>
+		<a th:href="@{/}" class="btn btn-primary">
+			Strona główna
+		</a>
+	</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="pl"
+	  xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:th="http://www.thymeleaf.org"
+	  layout:decorate="~{layout/main}">
+<head>
+	<title>Oferty</title>
+</head>
+<body>
+<div layout:fragment="content">
+	<div class="text-center pt-5 pb-4">
+		<div class="h2 text-primary">
+			Nieautoryzowany dostęp
+		</div>
+		<div class="mt-2 mb-4">
+			Zaloguj się, aby przejść dalej
+		</div>
+		<a th:href="@{/login}" class="btn btn-primary">
+			Zaloguj
+		</a>
+	</div>
+</div>
+</body>
+</html>

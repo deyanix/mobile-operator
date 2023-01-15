@@ -65,6 +65,7 @@
 						</div>
 					</div>
 				</th>
+				<th></th>
 			</tr>
 			<tr th:each="agreement : ${agreements}" th:object="${agreement}">
 				<td>
@@ -76,6 +77,11 @@
 				<td th:text="*{offer.name}"></td>
 				<td th:text="*{signingDate}"></td>
 				<td th:text="*{expirationDate}"></td>
+				<td class="text-center">
+					<a th:href="@{/admin/agreements/{id}(id=${id})}" class="btn btn-outline-primary btn-sm">
+						<i class="fa-solid fa-chevron-right"></i>
+					</a>
+				</td>
 			</tr>
 		</table>
 	</div>
