@@ -64,6 +64,10 @@ public class Customer {
 		this.lastName = lastName;
 	}
 
+	public String getFullName() {
+		return String.join(" ", firstName, lastName);
+	}
+
 	public Date getBirthDate() {
 		return birthDate;
 	}

@@ -1,9 +1,11 @@
 package eu.deyanix.mobileoperator.controller;
 
-import eu.deyanix.mobileoperator.dto.UserAgreementCriteria;
+import eu.deyanix.mobileoperator.criteria.UserAgreementCriteria;
 import eu.deyanix.mobileoperator.entity.Address;
 import eu.deyanix.mobileoperator.entity.Customer;
 import eu.deyanix.mobileoperator.entity.User;
+import eu.deyanix.mobileoperator.service.AgreementService;
+import eu.deyanix.mobileoperator.service.CustomerService;
 import eu.deyanix.mobileoperator.service.UserService;
 import javax.validation.Valid;
 
@@ -20,9 +22,13 @@ import java.util.Optional;
 @Controller
 public class UserController {
 	private UserService userService;
+	private AgreementService agreementService;
+	private CustomerService customerService;
 
-	public UserController(UserService userService) {
+	public UserController(UserService userService, AgreementService agreementService, CustomerService customerService) {
 		this.userService = userService;
+		this.agreementService = agreementService;
+		this.customerService = customerService;
 	}
 
 	@RequestMapping("/user")
@@ -52,14 +58,14 @@ public class UserController {
 			model.addAttribute("errors", result);
 			return "user/edit";
 		}
-		userService.updateCustomer(customer);
+		customerService.updateCurrentCustomer(customer);
 		return "redirect:/user";
 	}
 
 	@GetMapping("/user/agreements")
 	public String getAgreements(Model model, UserAgreementCriteria criteria) {
 		model.addAttribute("criteria", criteria);
-		model.addAttribute("agreements", userService.getAgreements(criteria));
+		model.addAttribute("agreements", agreementService.getUserAgreements(criteria));
 		return "user/agreements";
 	}
 }

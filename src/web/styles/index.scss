@@ -9,10 +9,21 @@ $fa-font-path: "../node_modules/@fortawesome/fontawesome-free/webfonts";
 @import "login";
 @import "offer";
 @import "user";
+@import "admin";
 
 .dropdown-item {
   display: flex;
   .dropdown-icon {
 	width: 30px;
   }
+}
+
+.sort-active {
+  color: $primary;
+  text-decoration: none;
+}
+
+.sort-inactive {
+  color: transparentize($primary, 0.5);
+  text-decoration: none;
 }

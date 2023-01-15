@@ -1,6 +1,8 @@
 package eu.deyanix.mobileoperator.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
@@ -14,13 +16,16 @@ public class Agreement {
     private Long id;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
+    @Column(nullable = false)
     private LocalDate signingDate;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
+    @Column(nullable = false)
     private LocalDate expirationDate;
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Offer offer;
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @NotFound(action = NotFoundAction.IGNORE)
     private Customer customer;
 
     public void setId(Long id) {

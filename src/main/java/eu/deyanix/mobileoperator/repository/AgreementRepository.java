@@ -18,4 +18,10 @@ public interface AgreementRepository extends CrudRepository<Agreement, Long>, Pa
 
 	@Query("SELECT a FROM Agreement a INNER JOIN a.offer.mobileOffer mo WHERE a.customer = ?1")
 	Page<Agreement> findAllMobileByCustomer(Customer customer, Pageable pageable);
+
+	@Query("SELECT a FROM Agreement a LEFT JOIN a.offer.mobileOffer mo WHERE mo IS NULL")
+	Page<Agreement> findAllInternet(Pageable pageable);
+
+	@Query("SELECT a FROM Agreement a INNER JOIN a.offer.mobileOffer mo")
+	Page<Agreement> findAllMobile(Pageable pageable);
 }
