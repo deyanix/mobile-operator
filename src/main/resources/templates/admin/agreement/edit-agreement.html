@@ -71,32 +71,12 @@
 				</div>
 			</div>
 			<div class="col-12 text-end">
+				<a th:if="${id != null}" class="btn btn-secondary" th:href="@{/admin/agreements/{id}(id=${id})}">Anuluj</a>
+				<a th:if="${id == null}" class="btn btn-secondary" th:href="@{/admin/agreements}">Anuluj</a>
 				<button type="submit" class="btn btn-primary">Zapisz</button>
 			</div>
 		</div>
 	</form>
-<!--	TODO: Add it -->
-<!--	<div id="agreement-delete-modal" class="modal fade" tabindex="-1">-->
-<!--		<div class="modal-dialog">-->
-<!--			<form th:action="@{/admin/agreement/{id}/delete(id=${user.id})}" method="POST" class="modal-content">-->
-<!--				<div class="modal-header">-->
-<!--					<h5 class="modal-title">Usuwanie umowy</h5>-->
-<!--					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
-<!--				</div>-->
-<!--				<div class="modal-body">-->
-<!--					<p>-->
-<!--						Czy na pewno chcesz usunąć umowę <b><span th:text="${agreement?.}"></span></b>?-->
-<!--					</p>-->
-<!--				</div>-->
-<!--				<div class="modal-footer">-->
-<!--					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>-->
-<!--					<button type="submit" class="btn btn-primary">-->
-<!--						Zatwierdź-->
-<!--					</button>-->
-<!--				</div>-->
-<!--			</form>-->
-<!--		</div>-->
-<!--	</div>-->
 </div>
 </body>
 </html>

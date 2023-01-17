@@ -9,7 +9,7 @@
 	<div class="d-flex justify-content-between align-items-center mb-2">
 		<div class="h6">Dane umowy</div>
 		<div class="d-flex gap-2">
-			<a class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#user-delete-modal">
+			<a class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#agreement-delete-modal">
 				<i class="fa-solid fa-trash"></i>
 			</a>
 			<a class="btn btn-outline-primary" th:href="@{/admin/agreements/{id}/edit(id=${agreement.id})}">
@@ -19,14 +19,6 @@
 	</div>
 	<div th:object="${agreement}">
 		<table class="table table-bordered">
-			<tr>
-				<th style="width: 160px">Data podpisania</th>
-				<td th:text="*{signingDate}"></td>
-			</tr>
-			<tr>
-				<th style="width: 160px">Data ważności</th>
-				<td th:text="*{expirationDate}"></td>
-			</tr>
 			<tr>
 				<th style="width: 160px">Abonent</th>
 				<td>
@@ -39,7 +31,98 @@
 					</span>
 				</td>
 			</tr>
+			<tr>
+				<th style="width: 160px">Data podpisania</th>
+				<td th:text="*{signingDate}"></td>
+			</tr>
+			<tr>
+				<th style="width: 160px">Data ważności</th>
+				<td th:text="*{expirationDate}"></td>
+			</tr>
 		</table>
+	</div>
+	<div class="h6 mb-2">Dane taryfy</div>
+	<div th:object="${agreement.offer}">
+		<table class="table table-bordered">
+			<tr>
+				<th style="width: 160px">Taryfa</th>
+				<td>
+					<span th:text="${agreement.offer.name}"></span>
+				</td>
+			</tr>
+			<tr>
+				<th style="width: 160px">Opłata aktywacyjna</th>
+				<td>
+					<span th:text="${#numbers.formatDecimal(agreement.offer.activationFee, 1, 2, 'COMMA')}"></span>
+					<span>zł</span>
+				</td>
+			</tr>
+			<tr>
+				<th style="width: 160px">Opłata miesięczna</th>
+				<td>
+					<span th:text="${#numbers.formatDecimal(agreement.offer.monthlyCost, 1, 2, 'COMMA')}"></span>
+					<span>zł</span>
+				</td>
+			</tr>
+			<tr>
+				<th style="width: 160px">Czas trwania</th>
+				<td>
+					<span th:text="${agreement.offer.duration}"></span>
+					<span>mies.</span>
+				</td>
+			</tr>
+			<tr>
+				<th style="width: 160px">Limit internetu</th>
+				<td th:if="${agreement.offer.internetLimit != null}">
+					<span th:text="${agreement.offer.internetLimit / 1024}"></span>
+					<span>GB</span>
+				</td>
+				<td th:if="${agreement.offer.internetLimit == null}">
+					Bez limitu
+				</td>
+			</tr>
+			<th:block th:if="${agreement.offer.mobileOffer != null}">
+				<tr>
+					<th style="width: 160px">SMS</th>
+					<td th:if="${agreement.offer.mobileOffer.smsLimit != null}">
+						<span th:text="${agreement.offer.mobileOffer.smsLimit / 1024}"></span>
+					</td>
+					<td th:if="${agreement.offer.mobileOffer.smsLimit == null}">
+						Bez limitu
+					</td>
+				</tr>
+				<tr>
+					<th style="width: 160px">MMS</th>
+					<td th:if="${agreement.offer.mobileOffer.mmsLimit != null}">
+						<span th:text="${agreement.offer.mobileOffer.mmsLimit / 1024}"></span>
+					</td>
+					<td th:if="${agreement.offer.mobileOffer.mmsLimit == null}">
+						Bez limitu
+					</td>
+				</tr>
+			</th:block>
+		</table>
+	</div>
+	<div id="agreement-delete-modal" class="modal fade" tabindex="-1">
+		<div class="modal-dialog">
+			<form th:action="@{/admin/agreement/{id}/delete(id=${agreement.id})}" method="POST" class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Usuwanie umowy</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<p>
+						Czy na pewno chcesz usunąć umowę abonenta <b><span th:text="${agreement.customer.fullName}"></span></b>?
+					</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+					<button type="submit" class="btn btn-primary">
+						Zatwierdź
+					</button>
+				</div>
+			</form>
+		</div>
 	</div>
 </div>
 </body>

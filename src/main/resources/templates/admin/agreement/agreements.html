@@ -6,6 +6,14 @@
 	  layout:decorate="~{layout/admin}">
 <body>
 <div layout:fragment="content" th:object="${criteria}">
+	<div class="d-flex justify-content-between align-items-center mb-2">
+		<div class="h5">Umowy</div>
+		<div class="d-flex gap-2">
+			<a class="btn btn-outline-primary" th:href="@{/admin/agreements/create}">
+				<i class="fa-solid fa-plus"></i>
+			</a>
+		</div>
+	</div>
 	<div class="row mb-3">
 		<label for="mobile-select" class="col-md-3 col-form-label">Rodzaj umowy</label>
 		<div class="col-md-9">

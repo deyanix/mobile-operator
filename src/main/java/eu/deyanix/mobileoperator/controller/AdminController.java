@@ -188,6 +188,7 @@ public class AdminController {
 			Model model
 	) {
 		if (result.hasErrors()) {
+			model.addAttribute("id", null);
 			model.addAttribute("agreement", creation);
 			model.addAttribute("offers", offerService.getOffers());
 			model.addAttribute("customers", customerService.getCustomers());
@@ -229,6 +230,7 @@ public class AdminController {
 				.orElseThrow(EntityNotFoundException::new);
 
 		if (result.hasErrors()) {
+			model.addAttribute("id", agreement.getId());
 			model.addAttribute("agreement", creation);
 			model.addAttribute("offers", offerService.getOffers());
 			model.addAttribute("customers", customerService.getCustomers());
@@ -237,5 +239,14 @@ public class AdminController {
 		}
 		agreementService.saveAgreement(agreementService.mapCreationToAgreement(creation, agreement));
 		return "redirect:/admin/agreements";
+	}
+
+	@PostMapping("/admin/agreements/{id}/delete")
+	public String deleteAgreement(@PathVariable Long id) {
+		Agreement agreement = agreementService.getAgreement(id)
+				.orElseThrow(EntityNotFoundException::new);
+		agreementService.deleteAgreement(agreement);
+
+		return String.format("redirect:/admin/agreements/%d", id);
 	}
 }

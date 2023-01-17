@@ -126,7 +126,6 @@ $(function () {
 		if (width >= 768) {
 			navbar.show();
 		} else if (lastWidth >= 768) {
-			console.log('YES!')
 			navbar.hide();
 		}
 		lastWidth = width;
@@ -181,7 +180,7 @@ $(function () {
 
 		const offerId = parseInt(offerIdText);
 		try {
-			const response = await Promise.all([
+			await Promise.all([
 				api.post('/offers/create',{ offerId }),
 				wait(500)
 			]);
