@@ -1,12 +1,12 @@
 package eu.deyanix.mobileoperator.entity;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -50,6 +50,8 @@ public class Customer {
 	@Valid
 	@NotNull
 	private Address address;
+	@OneToOne(mappedBy = "customer")
+	private User user;
 
 	public void setId(Long id) {
 		this.id = id;
@@ -101,6 +103,14 @@ public class Customer {
 
 	public void setAddress(Address address) {
 		this.address = address;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	@Override

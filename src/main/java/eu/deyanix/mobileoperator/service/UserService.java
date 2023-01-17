@@ -1,7 +1,7 @@
 package eu.deyanix.mobileoperator.service;
 
 import eu.deyanix.mobileoperator.criteria.UserCriteria;
-import eu.deyanix.mobileoperator.dto.UserCreation;
+import eu.deyanix.mobileoperator.creation.UserCreation;
 import eu.deyanix.mobileoperator.entity.Authority;
 import eu.deyanix.mobileoperator.entity.User;
 import eu.deyanix.mobileoperator.repository.AuthorityRepository;
@@ -19,13 +19,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Stream;
 
 @Service
 public class UserService {
@@ -81,6 +78,10 @@ public class UserService {
 	private PageRequest createUsersPageRequest(UserCriteria criteria) {
 		Sort sort = createUsersSort(criteria);
 		return PageRequest.of(criteria.getPage(), criteria.getPageSize(), sort);
+	}
+
+	public Iterable<User> getUsers() {
+		return userRepository.findAll();
 	}
 
 	public Page<User> getUsers(UserCriteria criteria) {

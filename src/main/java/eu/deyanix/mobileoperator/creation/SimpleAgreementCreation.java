@@ -1,6 +1,6 @@
-package eu.deyanix.mobileoperator.dto;
+package eu.deyanix.mobileoperator.creation;
 
-public class AgreementCreation {
+public class SimpleAgreementCreation {
 	private Long offerId;
 
 	public Long getOfferId() {

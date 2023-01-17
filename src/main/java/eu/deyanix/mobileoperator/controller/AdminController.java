@@ -1,8 +1,9 @@
 package eu.deyanix.mobileoperator.controller;
 
+import eu.deyanix.mobileoperator.creation.AgreementCreation;
 import eu.deyanix.mobileoperator.criteria.AgreementCriteria;
 import eu.deyanix.mobileoperator.criteria.UserCriteria;
-import eu.deyanix.mobileoperator.dto.UserCreation;
+import eu.deyanix.mobileoperator.creation.UserCreation;
 import eu.deyanix.mobileoperator.entity.Address;
 import eu.deyanix.mobileoperator.entity.Agreement;
 import eu.deyanix.mobileoperator.entity.Customer;
@@ -11,13 +12,13 @@ import eu.deyanix.mobileoperator.group.CreateUser;
 import eu.deyanix.mobileoperator.group.UpdateUser;
 import eu.deyanix.mobileoperator.service.AgreementService;
 import eu.deyanix.mobileoperator.service.CustomerService;
+import eu.deyanix.mobileoperator.service.OfferService;
 import eu.deyanix.mobileoperator.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -35,11 +36,13 @@ public class AdminController {
 	private AgreementService agreementService;
 	private CustomerService customerService;
 	private UserService userService;
+	private OfferService offerService;
 
-	public AdminController(AgreementService agreementService, CustomerService customerService, UserService userService) {
+	public AdminController(AgreementService agreementService, CustomerService customerService, UserService userService, OfferService offerService) {
 		this.agreementService = agreementService;
 		this.customerService = customerService;
 		this.userService = userService;
+		this.offerService = offerService;
 	}
 
 	@RequestMapping("/admin")
@@ -170,18 +173,69 @@ public class AdminController {
 		return "admin/agreement/agreements";
 	}
 
-	@RequestMapping("/admin/agreements/create")
+	@GetMapping("/admin/agreements/create")
 	public String createAgreement(Model model) {
+		model.addAttribute("agreement", new AgreementCreation());
+		model.addAttribute("offers", offerService.getOffers());
+		model.addAttribute("customers", customerService.getCustomers());
 		return "admin/agreement/edit-agreement";
+	}
+
+	@PostMapping("/admin/agreements/create")
+	public String createAgreement(
+			@RequestBody @ModelAttribute("agreement") @Valid AgreementCreation creation,
+			BindingResult result,
+			Model model
+	) {
+		if (result.hasErrors()) {
+			model.addAttribute("agreement", creation);
+			model.addAttribute("offers", offerService.getOffers());
+			model.addAttribute("customers", customerService.getCustomers());
+			model.addAttribute("errors", result);
+			return "admin/agreement/edit-agreement";
+		}
+		agreementService.saveAgreement(agreementService.mapCreationToAgreement(creation));
+		return "redirect:/admin/agreements";
 	}
 
 	@RequestMapping("/admin/agreements/{id}")
-	public String previewAgreement(Model model) {
+	public String previewAgreement(Model model, @PathVariable Long id) {
+		Agreement agreement = agreementService.getAgreement(id)
+				.orElseThrow(EntityNotFoundException::new);
+
+		model.addAttribute("agreement", agreement);
 		return "admin/agreement/agreement";
 	}
 
-	@RequestMapping("/admin/agreements/{id}/edit")
-	public String editAgreement(Model model) {
+	@GetMapping("/admin/agreements/{id}/edit")
+	public String editAgreement(Model model, @PathVariable Long id) {
+		Agreement agreement = agreementService.getAgreement(id)
+				.orElseThrow(EntityNotFoundException::new);
+
+		model.addAttribute("agreement", new AgreementCreation(agreement));
+		model.addAttribute("offers", offerService.getOffers());
+		model.addAttribute("customers", customerService.getCustomers());
 		return "admin/agreement/edit-agreement";
+	}
+
+	@PostMapping("/admin/agreements/{id}/edit")
+	public String editAgreement(
+			@RequestBody @ModelAttribute("agreement") @Valid AgreementCreation creation,
+			BindingResult result,
+			Model model,
+			@PathVariable Long id
+	) {
+		Agreement agreement = agreementService.getAgreement(id)
+				.orElseThrow(EntityNotFoundException::new);
+
+		if (result.hasErrors()) {
+			model.addAttribute("agreement", creation);
+			model.addAttribute("offers", offerService.getOffers());
+			model.addAttribute("customers", customerService.getCustomers());
+			model.addAttribute("errors", result);
+			return "admin/agreement/edit-agreement";
+		}
+		agreementService.saveAgreement(agreementService.mapCreationToAgreement(creation, agreement));
+		return "redirect:/admin/agreements";
 	}
 }

@@ -1,4 +1,4 @@
-package eu.deyanix.mobileoperator.dto;
+package eu.deyanix.mobileoperator.creation;
 
 import eu.deyanix.mobileoperator.group.CreateUser;
 import eu.deyanix.mobileoperator.group.UpdateUser;

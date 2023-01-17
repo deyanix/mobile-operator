@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="pl"
+	  xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:th="http://www.thymeleaf.org"
+	  layout:decorate="~{layout/admin}">
+<body>
+<div layout:fragment="content">
+	<div class="d-flex justify-content-between align-items-center mb-2">
+		<div class="h6">Dane umowy</div>
+		<div class="d-flex gap-2">
+			<a class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#user-delete-modal">
+				<i class="fa-solid fa-trash"></i>
+			</a>
+			<a class="btn btn-outline-primary" th:href="@{/admin/agreements/{id}/edit(id=${agreement.id})}">
+				<i class="fa-solid fa-pen-to-square"></i>
+			</a>
+		</div>
+	</div>
+	<div th:object="${agreement}">
+		<table class="table table-bordered">
+			<tr>
+				<th style="width: 160px">Data podpisania</th>
+				<td th:text="*{signingDate}"></td>
+			</tr>
+			<tr>
+				<th style="width: 160px">Data ważności</th>
+				<td th:text="*{expirationDate}"></td>
+			</tr>
+			<tr>
+				<th style="width: 160px">Abonent</th>
+				<td>
+					<a th:if="${agreement.customer != null && agreement.customer.user != null}"
+					   th:href="@{/admin/users/{id}(id=${agreement.customer.user.id})}"
+					   th:text="*{customer.fullName}">
+					</a>
+					<span th:if="${agreement.customer != null && agreement.customer.user == null}"
+						  th:text="*{customer.fullName}">
+					</span>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+</body>
+</html>

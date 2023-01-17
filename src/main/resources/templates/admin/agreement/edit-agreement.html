@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="pl"
+	  xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:th="http://www.thymeleaf.org"
+	  layout:decorate="~{layout/admin}">
+<body>
+<div layout:fragment="content">
+	<form method="POST">
+		<div class="d-flex justify-content-between align-items-center">
+			<div class="h6">Dane umowy</div>
+			<button type="button" id="autocomplete-btn" class="btn btn-outline-primary" data-bs-toggle="tooltip" data-bs-title="Autouzupełnianie">
+				<i class="fa-solid fa-wand-sparkles"></i>
+			</button>
+		</div>
+		<div class="row align-items-center g-2 mb-2">
+			<div class="col-12 col-md-5">
+				<div class="form-floating">
+					<select id="offer-select" class="form-select" name="offerId">
+						<option th:selected="${agreement.offerId == null}" disabled></option>
+
+						<option th:each="offer : ${offers}"
+								th:value="${offer.id}"
+								th:text="${offer.name}"
+								th:selected="${agreement.offerId == offer.id}"
+								th:attr="data-duration=${offer.duration}"></option>
+					</select>
+					<label for="offer-select">Oferta *</label>
+				</div>
+			</div>
+			<div class="col-12 col-md-5">
+				<div class="form-floating">
+					<select id="user-select" class="form-select" name="customerId">
+						<option th:selected="${agreement.offerId == null}" selected disabled></option>
+						<option th:each="customer : ${customers}"
+								th:value="${customer.id}"
+								th:selected="${agreement.customerId == customer.id}">
+							<span th:text="${customer.fullName}"></span>
+							<span th:if="${customer.user != null}">
+								(<span th:text="${customer.user.username}"></span>)
+							</span>
+						</option>
+					</select>
+					<label for="user-select">Abonent *</label>
+				</div>
+			</div>
+		</div>
+		<div class="row g-2 mb-2">
+			<div class="col-12 col-md-5">
+				<div class="form-floating">
+					<input id="start-date-input" class="form-control" type="date" name="signingDate" th:field="${agreement.signingDate}"/>
+					<label for="start-date-input">Data podpisania *</label>
+				</div>
+			</div>
+			<div class="col-12 col-md-5">
+				<div class="form-floating">
+					<input id="end-date-input" class="form-control" type="date" name="expirationDate" th:field="${agreement.expirationDate}"/>
+					<label for="end-date-input">Data wygaśnięcia</label>
+				</div>
+			</div>
+			<div class="col-12">
+				Okres trwania umowy: <strong id="agreement-duration">brak danych</strong>
+			</div>
+		</div>
+		<div class="row g-2">
+			<div th:if="${errors != null}" class="col-12">
+				<div class="alert alert-danger">
+					<ul class="mb-0">
+						<li th:each="error : ${errors.getAllErrors()}" th:text="${error.getDefaultMessage()}"></li>
+					</ul>
+				</div>
+			</div>
+			<div class="col-12 text-end">
+				<button type="submit" class="btn btn-primary">Zapisz</button>
+			</div>
+		</div>
+	</form>
+<!--	TODO: Add it -->
+<!--	<div id="agreement-delete-modal" class="modal fade" tabindex="-1">-->
+<!--		<div class="modal-dialog">-->
+<!--			<form th:action="@{/admin/agreement/{id}/delete(id=${user.id})}" method="POST" class="modal-content">-->
+<!--				<div class="modal-header">-->
+<!--					<h5 class="modal-title">Usuwanie umowy</h5>-->
+<!--					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+<!--				</div>-->
+<!--				<div class="modal-body">-->
+<!--					<p>-->
+<!--						Czy na pewno chcesz usunąć umowę <b><span th:text="${agreement?.}"></span></b>?-->
+<!--					</p>-->
+<!--				</div>-->
+<!--				<div class="modal-footer">-->
+<!--					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>-->
+<!--					<button type="submit" class="btn btn-primary">-->
+<!--						Zatwierdź-->
+<!--					</button>-->
+<!--				</div>-->
+<!--			</form>-->
+<!--		</div>-->
+<!--	</div>-->
+</div>
+</body>
+</html>

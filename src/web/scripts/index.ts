@@ -4,10 +4,12 @@ import "@fontsource/nunito";
 import '@popperjs/core';
 import 'bootstrap';
 
-import _ from 'lodash';
 import $ from 'jquery';
-import {Modal, Collapse} from 'bootstrap';
+import {Modal, Collapse, Tooltip} from 'bootstrap';
 import axios from "axios";
+import {setDefaultOptions, format, addMonths, parse, intervalToDuration, formatDuration, differenceInMonths, differenceInDays} from 'date-fns';
+import pl from 'date-fns/locale/pl';
+import _ from "lodash";
 
 const api = axios.create({
 	withCredentials: true,
@@ -18,6 +20,67 @@ function wait(time: number): Promise<void> {
 		setTimeout(() => resolve(), time);
 	});
 }
+
+$(function () {
+	setDefaultOptions({
+		locale: pl
+	})
+
+	const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+	[...tooltipTriggerList].map(tooltipTriggerEl => new Tooltip(tooltipTriggerEl));
+})
+
+$(function () {
+	const $autocompleteBtn = $('#autocomplete-btn');
+	const $offerSelect = $('#offer-select');
+	const $startDateInput = $('#start-date-input');
+	const $endDateInput = $('#end-date-input');
+	const $agreementDuration = $('#agreement-duration');
+
+	function getDateFromEl($el: JQuery): Date | undefined {
+		const textValue = $el.val();
+		if (_.isString(textValue) && !_.isEmpty(textValue)) {
+			return parse(textValue, 'yyyy-MM-dd', new Date());
+		}
+	}
+
+	function calculateDistance(): void {
+		const start = getDateFromEl($startDateInput);
+		const end = getDateFromEl($endDateInput);
+		if (!_.isDate(start) || !_.isDate(end)) {
+			$agreementDuration.text('brak danych');
+			return;
+		}
+
+		const duration = intervalToDuration({start, end});
+		$agreementDuration.text(formatDuration({
+			months: (duration.years ?? 0) * 12 + (duration.months ?? 0),
+			weeks: duration.weeks,
+			days: duration.days
+		}))
+	}
+
+	$startDateInput.on('change', calculateDistance);
+
+	$endDateInput.on('change', calculateDistance);
+
+	$autocompleteBtn.on('click', function () {
+		const $option = $offerSelect.find(':selected');
+		const offerDuration = $option.data('duration');
+		if (!_.isNumber(offerDuration) || _.isNaN(offerDuration)) {
+			return;
+		}
+
+		const startDate = getDateFromEl($startDateInput) ?? new Date();
+		const endDate = addMonths(startDate, offerDuration);
+
+		$startDateInput.val(format(startDate, 'yyyy-MM-dd'));
+		$endDateInput.val(format(endDate, 'yyyy-MM-dd'));
+		calculateDistance();
+	});
+
+	calculateDistance();
+})
 
 $(function () {
 	$('#page-size-select').on('change', function () {

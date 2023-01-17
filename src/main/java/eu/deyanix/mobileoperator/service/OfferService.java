@@ -5,6 +5,7 @@ import eu.deyanix.mobileoperator.entity.Offer;
 import eu.deyanix.mobileoperator.entity.User;
 import eu.deyanix.mobileoperator.repository.AgreementRepository;
 import eu.deyanix.mobileoperator.repository.OfferRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -21,25 +22,15 @@ public class OfferService {
 		this.agreementRepository = agreementRepository;
 	}
 
+	public Iterable<Offer> getOffers() {
+		return offerRepository.findAll();
+	}
+
 	public Iterable<Offer> getInternetOffers() {
 		return offerRepository.findAllInternet();
 	}
 
 	public Iterable<Offer> getMobileOffers() {
 		return offerRepository.findAllMobile();
-	}
-
-	public void createAgreement(Long offerId) {
-		User user = userService.getCurrentUser();
-		Offer offer = offerRepository.findById(offerId).orElse(null);
-		LocalDate signingDate = LocalDate.now();
-		LocalDate expirationDate = signingDate.plusMonths(offer.getDuration());
-
-		Agreement agreement = new Agreement();
-		agreement.setOffer(offer);
-		agreement.setCustomer(user.getCustomer());
-		agreement.setSigningDate(signingDate);
-		agreement.setExpirationDate(expirationDate);
-		agreementRepository.save(agreement);
 	}
 }

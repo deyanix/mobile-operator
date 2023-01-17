@@ -19,9 +19,9 @@ public class Offer {
     private String name;
     @Column(nullable = false)
     private Integer duration;
-    @Column
+    @Column(nullable = false)
     private Float monthlyCost;
-    @Column
+    @Column(nullable = false)
     private Float activationFee;
     @Column
     private Integer internetLimit;

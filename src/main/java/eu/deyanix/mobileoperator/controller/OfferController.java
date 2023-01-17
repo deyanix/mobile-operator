@@ -1,8 +1,8 @@
 package eu.deyanix.mobileoperator.controller;
 
-import eu.deyanix.mobileoperator.dto.AgreementCreation;
+import eu.deyanix.mobileoperator.creation.SimpleAgreementCreation;
+import eu.deyanix.mobileoperator.service.AgreementService;
 import eu.deyanix.mobileoperator.service.OfferService;
-import eu.deyanix.mobileoperator.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @Controller
 public class OfferController {
-	private UserService userService;
 	private OfferService offerService;
+	private AgreementService agreementService;
 
-	public OfferController(UserService userService, OfferService offerService) {
-		this.userService = userService;
+	public OfferController(OfferService offerService, AgreementService agreementService) {
 		this.offerService = offerService;
+		this.agreementService = agreementService;
 	}
 
 	@RequestMapping("/")
@@ -32,7 +32,7 @@ public class OfferController {
 	@PreAuthorize("hasRole('CUSTOMER')")
 	@PostMapping("/offers/create")
 	@ResponseStatus(HttpStatus.CREATED)
-	public void offers(@RequestBody AgreementCreation request) {
-		offerService.createAgreement(request.getOfferId());
+	public void offers(@RequestBody SimpleAgreementCreation request) {
+		agreementService.createUserAgreement(request.getOfferId());
 	}
 }

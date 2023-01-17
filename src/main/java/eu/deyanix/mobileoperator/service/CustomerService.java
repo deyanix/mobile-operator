@@ -23,6 +23,10 @@ public class CustomerService {
 		this.userService = userService;
 	}
 
+	public Iterable<Customer> getCustomers() {
+		return customerRepository.findAll();
+	}
+
 	public void updateUserCustomer(User user, Customer newCustomer) {
 		if (user.getCustomer() != null) {
 			newCustomer.setId(user.getCustomer().getId());

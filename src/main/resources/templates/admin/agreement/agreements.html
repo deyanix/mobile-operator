@@ -69,16 +69,19 @@
 			</tr>
 			<tr th:each="agreement : ${agreements}" th:object="${agreement}">
 				<td>
-					<a th:if="${agreement.customer != null}"
-					   th:href="@{/admin/users/{id}(id=${agreement.customer.id})}"
+					<a th:if="${agreement.customer != null && agreement.customer.user != null}"
+					   th:href="@{/admin/users/{id}(id=${agreement.customer.user.id})}"
 					   th:text="*{customer.fullName}">
 					</a>
+					<span th:if="${agreement.customer != null && agreement.customer.user == null}"
+						  th:text="*{customer.fullName}">
+					</span>
 				</td>
 				<td th:text="*{offer.name}"></td>
 				<td th:text="*{signingDate}"></td>
 				<td th:text="*{expirationDate}"></td>
 				<td class="text-center">
-					<a th:href="@{/admin/agreements/{id}(id=${id})}" class="btn btn-outline-primary btn-sm">
+					<a th:href="@{/admin/agreements/{id}(id=${agreement.id})}" class="btn btn-outline-primary btn-sm">
 						<i class="fa-solid fa-chevron-right"></i>
 					</a>
 				</td>
